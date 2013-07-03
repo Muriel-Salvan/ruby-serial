@@ -13,4 +13,4 @@ Library serializing Ruby objects, optimized in many ways:
 
 ## Contact
 
-Want to contribute? Have any questions? [Contact Muriel!](muriel@x-aeon.com)
+Want to contribute? Have any questions? [Contact Muriel!](mailto:muriel@x-aeon.com)
