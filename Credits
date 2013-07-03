@@ -1,0 +1,11 @@
+= Projects used by RubySerial
+
+== MessagePack
+* Furuhashi Sadayuki (http://twitter.com/frsyuki)
+* http://msgpack.org/
+* Ruby binding used to serialize data in a JSON way
+
+== Ruby
+* Yukihiro « matz » Matsumoto (http://www.rubyist.net/~matz/)
+* http://www.ruby-lang.org/
+* Thanks a lot Matz for this truly wonderful language !

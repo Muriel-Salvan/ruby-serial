@@ -1,0 +1,15 @@
+= Ruby Serial
+
+Optimized serialization library for Ruby objects.
+
+== Where is the documentation ?
+
+Check the website at http://ruby-serial.sourceforge.net
+
+== Who wrote it ?
+
+Check the AUTHORS[link:AUTHORS.html] file.
+
+== What is the license ?
+
+You can find out in the LICENSE[link:LICENSE.html] file.
