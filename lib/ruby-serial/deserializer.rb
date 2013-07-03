@@ -16,16 +16,32 @@ module RubySerial
     # Result::
     # * _Object_: The deserialized object
     def load
-      obj = MessagePack::unpack(@data)
-      if (obj['shared_objs'].empty?)
-        return deserialize_rec(obj['obj'])
+      data = MessagePack::unpack(@data)
+      unpack_method_name = "unpack_data_version_#{data['version']}".to_sym
+      raise "Unknown version #{data['version']}. Please use a most recent version of RubySerial to decode your data." if (!self.respond_to?(unpack_method_name))
+      return self.send(unpack_method_name, data)
+    end
+
+    protected
+
+    # Unpack data for version 1
+    #
+    # Parameters::
+    # * *data* (<em>map<Symbol,Object></em>): Data to deserialize
+    # Result::
+    # * _Object_: The unpacked data
+    def unpack_data_version_1(data)
+      if (data['shared_objs'].empty?)
+        return deserialize_rec(data['obj'])
       else
         # We need to replace some data before
-        @serialized_shared_objs = obj['shared_objs']
+        @serialized_shared_objs = data['shared_objs']
         @decoded_shared_objs = {}
-        return deserialize_rec(obj['obj'])
+        return deserialize_rec(data['obj'])
       end
     end
+
+    private
 
     # Deserialize recursively a serialized object
     #

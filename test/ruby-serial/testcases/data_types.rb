@@ -5,52 +5,54 @@ module RubySerialTest
     # Test simple data types are serialized correctly
     class DataTypes < ::Test::Unit::TestCase
 
+      extend Common::Helpers
+
       Common::DATA_SAMPLES.each do |data_type_name, var|
 
         # A single data
-        define_method("test_single_#{data_type_name}") do
-          assert_equal var, RubySerial::load(RubySerial::dump(var))
+        def_test "single_#{data_type_name}" do
+          assert_equal var, ruby_serial(var)
         end
 
         # A single data in an Array
-        define_method("test_array_#{data_type_name}") do
+        def_test "array_#{data_type_name}" do
           array = [ var ]
-          assert_equal array, RubySerial::load(RubySerial::dump(array))
+          assert_equal array, ruby_serial(array)
         end
 
         # A single data in a Hash as a key
-        define_method("test_hash_key_#{data_type_name}") do
+        def_test "hash_key_#{data_type_name}" do
           hash = { var => 42 }
-          assert_equal hash, RubySerial::load(RubySerial::dump(hash))
+          assert_equal hash, ruby_serial(hash)
         end
 
         # A single data in a Hash as a value
-        define_method("test_hash_value_#{data_type_name}") do
+        def_test "hash_value_#{data_type_name}" do
           hash = { 42 => var }
-          assert_equal hash, RubySerial::load(RubySerial::dump(hash))
+          assert_equal hash, ruby_serial(hash)
         end
 
       end
 
-      def test_all_in_array
+      def_test 'all_in_array' do
         array = Common::DATA_SAMPLES.values
-        assert_equal array, RubySerial::load(RubySerial::dump(array))
+        assert_equal array, ruby_serial(array)
       end
 
-      def test_all_in_hash_key
+      def_test 'all_in_hash_key' do
         hash = {}
         Common::DATA_SAMPLES.values.each do |var|
           hash[var] = rand
         end
-        assert_equal hash, RubySerial::load(RubySerial::dump(hash))
+        assert_equal hash, ruby_serial(hash)
       end
 
-      def test_all_in_hash_value
+      def_test 'all_in_hash_value' do
         hash = {}
         Common::DATA_SAMPLES.values.each do |var|
           hash[var.object_id] = var
         end
-        assert_equal hash, RubySerial::load(RubySerial::dump(hash))
+        assert_equal hash, ruby_serial(hash)
       end
 
     end

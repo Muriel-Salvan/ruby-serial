@@ -11,6 +11,7 @@ $: << "#{root_path}/lib"
 require 'ruby-serial'
 
 # Load test files to execute
+require 'ruby-serial/common/helpers'
 require 'ruby-serial/common/data_samples'
 require 'ruby-serial/testcases/data_types'
 require 'ruby-serial/testcases/objects_sharing'

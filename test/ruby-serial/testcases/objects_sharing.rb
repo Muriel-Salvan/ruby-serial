@@ -5,20 +5,22 @@ module RubySerialTest
     # Test sharing objects
     class ObjectsSharing < ::Test::Unit::TestCase
 
+      extend Common::Helpers
+
       Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.each do |data_type_name, var|
 
         # Simple sharing in an Array
-        define_method("test_array_#{data_type_name}") do
+        def_test "array_#{data_type_name}" do
           obj1 = [ var, var ]
-          obj2 = RubySerial::load(RubySerial::dump(obj1))
+          obj2 = ruby_serial(obj1)
           assert_equal obj1, obj2
           assert_equal obj2[0].object_id, obj2[1].object_id
         end
 
         # Simple sharing in a Hash as values
-        define_method("test_hash_value_#{data_type_name}") do
+        def_test "hash_value_#{data_type_name}" do
           obj1 = { 1 => var, 2 => var }
-          obj2 = RubySerial::load(RubySerial::dump(obj1))
+          obj2 = ruby_serial(obj1)
           assert_equal obj1, obj2
           assert_equal obj2[1].object_id, obj2[2].object_id
         end
@@ -26,16 +28,16 @@ module RubySerialTest
         # TODO: Shared in objects' attributes
 
         # Sharing at different levels of an Array
-        define_method("test_array_levels_#{data_type_name}") do
+        def_test "array_levels_#{data_type_name}" do
           obj1 = [ var, [ var ], [ [ var ] ] ]
-          obj2 = RubySerial::load(RubySerial::dump(obj1))
+          obj2 = ruby_serial(obj1)
           assert_equal obj1, obj2
           assert_equal obj2[0].object_id, obj2[1][0].object_id
           assert_equal obj2[0].object_id, obj2[2][0][0].object_id
         end
 
         # Sharing at different levels of a Hash as values
-        define_method("test_hash_values_levels_#{data_type_name}") do
+        def_test "hash_values_levels_#{data_type_name}" do
           obj1 = {
             1 => var,
             2 => {
@@ -47,7 +49,7 @@ module RubySerialTest
               }
             }
           }
-          obj2 = RubySerial::load(RubySerial::dump(obj1))
+          obj2 = ruby_serial(obj1)
           assert_equal obj1, obj2
           assert_equal obj2[1].object_id, obj2[2][4].object_id
           assert_equal obj2[1].object_id, obj2[3][5][6].object_id
@@ -60,15 +62,15 @@ module RubySerialTest
       Common::DATA_SAMPLES_SHAREABLE.each do |data_type_name, var|
 
         # Simple sharing in a Hash as key and value
-        define_method("test_hash_key_and_value_#{data_type_name}") do
+        def_test "hash_key_and_value_#{data_type_name}" do
           obj1 = { var => 1, 2 => var }
-          obj2 = RubySerial::load(RubySerial::dump(obj1))
+          obj2 = ruby_serial(obj1)
           assert_equal obj1, obj2
           assert_equal obj2.keys.select { |key| key != 2 }[0].object_id, obj2[2].object_id
         end
 
         # Sharing at different levels of a Hash as keys and values
-        define_method("test_hash_keys_and_values_levels_#{data_type_name}") do
+        def_test "hash_keys_and_values_levels_#{data_type_name}" do
           obj1 = {
             1 => var,
             2 => {
@@ -80,7 +82,7 @@ module RubySerialTest
               }
             }
           }
-          obj2 = RubySerial::load(RubySerial::dump(obj1))
+          obj2 = ruby_serial(obj1)
           assert_equal obj1, obj2
           assert_equal obj2[1].object_id, obj2[2].keys[0].object_id
           assert_equal obj2[1].object_id, obj2[3][5].keys[0].object_id
@@ -88,7 +90,7 @@ module RubySerialTest
 
       end
 
-      def test_share_all_in_array
+      def_test 'share_all_in_array' do
         obj1 = []
         nbr_repeatitions = 5
         nbr_repeatitions.times do
@@ -96,7 +98,7 @@ module RubySerialTest
             obj1 << var
           end
         end
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         nbr_data_samples = Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.size
         nbr_data_samples.times do |idx_data_sample|
@@ -106,7 +108,7 @@ module RubySerialTest
         end
       end
 
-      def test_share_all_in_hash_values
+      def_test 'share_all_in_hash_values' do
         obj1 = {}
         nbr_repeatitions = 5
         nbr_data_samples = Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.size
@@ -115,7 +117,7 @@ module RubySerialTest
             obj1[nbr_data_samples*idx_repeatition+idx_data_sample] = var
           end
         end
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         nbr_data_samples.times do |idx_data_sample|
           (nbr_repeatitions-1).times do |idx_repeatition|
@@ -124,7 +126,7 @@ module RubySerialTest
         end
       end
 
-      def test_share_all_in_hash_keys
+      def_test 'share_all_in_hash_keys' do
         obj1 = {}
         nbr_repeatitions = 5
         nbr_data_samples = Common::DATA_SAMPLES_SHAREABLE.size
@@ -133,7 +135,7 @@ module RubySerialTest
             obj1[nbr_data_samples*idx_repeatition+idx_data_sample] = { var => 1 }
           end
         end
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         nbr_data_samples.times do |idx_data_sample|
           (nbr_repeatitions-1).times do |idx_repeatition|
@@ -144,31 +146,31 @@ module RubySerialTest
 
       # TODO: Shared in objects' attributes
 
-      def test_cyclic_share_in_array
+      def_test 'cyclic_share_in_array' do
         obj1 = []
         obj1 << obj1
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         assert_equal obj2.object_id, obj2[0].object_id
       end
 
-      def test_cyclic_share_deeper_in_array
+      def_test 'cyclic_share_deeper_in_array' do
         shared_obj = []
         obj1 = [ 1, shared_obj ]
         shared_obj << [ 2, [ shared_obj ] ]
         # obj1 = [ 1, *[ [ 2, [ * ] ] ] ]
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         assert_equal obj2[1].object_id, obj2[1][0][1][0].object_id
       end
 
-      def test_cross_cyclic_share_in_array
+      def_test 'cross_cyclic_share_in_array' do
         shared_obj1 = [ 2 ]
         shared_obj2 = [ 3, shared_obj1 ]
         shared_obj1 << shared_obj2
         obj1 = [ 1, shared_obj1, shared_obj2 ]
         # obj1 = [ 1, a[ 2, b[ 3, a[ 2, b ] ] ], b[ 3, a ] ]
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         assert_equal obj2[1].object_id, obj2[1][1][1].object_id
         assert_equal obj2[1].object_id, obj2[2][1].object_id
@@ -176,15 +178,15 @@ module RubySerialTest
         assert_equal obj2[2].object_id, obj2[1][1][1][1].object_id
       end
 
-      def test_cyclic_share_in_hash_values
+      def_test 'cyclic_share_in_hash_values' do
         obj1 = {}
         obj1[1] = obj1
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         assert_equal obj2.object_id, obj2[1].object_id
       end
 
-      def test_cyclic_share_deeper_in_hash_values
+      def_test 'cyclic_share_deeper_in_hash_values' do
         shared_obj = {}
         obj1 = { 1 => 2, 3 => shared_obj }
         shared_obj[4] = { 5 => shared_obj }
@@ -196,12 +198,12 @@ module RubySerialTest
         #     }
         #   }
         # }
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         assert_equal obj2[3].object_id, obj2[3][4][5].object_id
       end
 
-      def test_cross_cyclic_share_in_hash_values
+      def_test 'cross_cyclic_share_in_hash_values' do
         shared_obj1 = { 5 => 6 }
         shared_obj2 = {
           8 => 9,
@@ -230,7 +232,7 @@ module RubySerialTest
         #     10 => a
         #   }
         # }
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         assert_equal obj1, obj2
         assert_equal obj2[3].object_id, obj2[3][7][10].object_id
         assert_equal obj2[3].object_id, obj2[4][10].object_id
@@ -238,16 +240,16 @@ module RubySerialTest
         assert_equal obj2[4].object_id, obj2[3][7][10][7].object_id
       end
 
-      def test_cyclic_share_in_hash_keys
+      def_test 'cyclic_share_in_hash_keys' do
         obj1 = {}
         obj1[obj1] = 1
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         # TODO: Understand why the following fails
         #assert_equal obj1, obj2
         assert_equal obj2.object_id, obj2.keys[0].object_id
       end
 
-      def test_cyclic_share_deeper_in_hash_keys
+      def_test 'cyclic_share_deeper_in_hash_keys' do
         shared_obj = {}
         obj1 = { 1 => 2, shared_obj => 3 }
         shared_obj[4] = { shared_obj => 5 }
@@ -259,13 +261,13 @@ module RubySerialTest
         #     }
         #   } => 3
         # }
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         # TODO: Understand why the following fails
         #assert_equal obj1, obj2
         assert_equal obj2.keys.select { |key| key != 1 }[0].object_id, obj2.keys.select { |key| key != 1 }[0][4].keys[0].object_id
       end
 
-      def test_cross_cyclic_share_in_hash_keys
+      def_test 'cross_cyclic_share_in_hash_keys' do
         shared_obj1 = { 5 => 6 }
         shared_obj2 = {
           8 => 9,
@@ -294,7 +296,7 @@ module RubySerialTest
         #     a => 10
         #   } => 4
         # }
-        obj2 = RubySerial::load(RubySerial::dump(obj1))
+        obj2 = ruby_serial(obj1)
         # TODO: Understand why the following fails
         #assert_equal obj1, obj2
         # Get back the 2 shared objects

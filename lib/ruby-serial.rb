@@ -10,7 +10,7 @@ module RubySerial
   # Parameters::
   # * *obj* (_Object_): Object to serialize
   # * *options* (<em>map<Symbol,Object></em>): Options [default = {}]
-  #   * *:version* (_Fixnum_): The version to be used to encode
+  #   * *:version* (_String_): The version to be used to encode
   # Result::
   # * _String_: Serialized object
   def self.dump(obj, options = {})

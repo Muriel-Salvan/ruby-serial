@@ -2,16 +2,17 @@ module RubySerial
 
   class Serializer
 
-    # Find a method name that is unlikely to conflict with other modules that might also override to_msgpack
-    ALIASED_TO_MSGPACK_METHOD = :__to_msgpack_without_MessagePackOverride__
+    # Default encoding version (should be the last one)
+    DEFAULT_VERSION = '1'
 
     # Constructor
     #
     # Parameters::
     # * *obj* (_Object_): Ruby object to serialize
     # * *options* (<em>map<Symbol,Object></em>): Options [default = {}]
-    #   * *:version* (_Fixnum_): The version to be used to encode
+    #   * *:version* (_String_): The version to be used to encode
     def initialize(obj, options = {})
+      @version = (options[:version] || DEFAULT_VERSION)
       @obj = obj
       # Map of objects ID, with their corresponding number of shared objects among their descendants (those having 0 share nothing)
       # map< ObjectID, NbrSharedObjects >
@@ -25,6 +26,21 @@ module RubySerial
     # Result::
     # * _String_: The object serialized
     def dump
+      pack_method_name = "pack_data_version_#{@version}".to_sym
+      raise "Unknown version #{@version}." if (!self.respond_to?(pack_method_name))
+      data = self.send(pack_method_name)
+      data['version'] = @version
+
+      return data.to_msgpack
+    end
+
+    protected
+
+    # Get data for version 1
+    #
+    # Result::
+    # * <em>map<Symbol,Object></em>: The data to serialize
+    def pack_data_version_1
       # First look for shared objects
       # Set of objects parsed, per object_id
       @objs = {}
@@ -40,10 +56,9 @@ module RubySerial
       end
       #puts "Found #{@shared_objs_to_store.size} shared objects to be stored"
       return {
-        'version' => 1,
         'obj' => serialize_rec(@obj),
         'shared_objs' => @shared_objs_to_store
-      }.to_msgpack
+      }
     end
 
     private

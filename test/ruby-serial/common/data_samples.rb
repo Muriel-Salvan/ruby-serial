@@ -23,6 +23,11 @@ module RubySerialTest
       'False' => false
     }.merge(DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS)
 
+    # Versions to be tested
+    VERSIONS = [
+      '1'
+    ]
+
   end
 
 end
