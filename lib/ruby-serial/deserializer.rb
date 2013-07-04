@@ -16,9 +16,13 @@ module RubySerial
     # Result::
     # * _Object_: The deserialized object
     def load
-      data = MessagePack::unpack(@data)
-      unpack_method_name = "unpack_data_version_#{data['version']}".to_sym
-      raise "Unknown version #{data['version']}. Please use a most recent version of RubySerial to decode your data." if (!self.respond_to?(unpack_method_name))
+      # Find the version
+      idx_data_separator = @data.index("\x00")
+      raise 'Unknown format of data. It appears this data has not been serialized using RubySerial.' if (idx_data_separator == nil)
+      version = @data[0..idx_data_separator-1]
+      data = @data[idx_data_separator+1..-1]
+      unpack_method_name = "unpack_data_version_#{version}".to_sym
+      raise "Unknown version \"#{version}\". Please use a most recent version of RubySerial to decode your data." if (!self.respond_to?(unpack_method_name))
       return self.send(unpack_method_name, data)
     end
 
@@ -27,38 +31,37 @@ module RubySerial
     # Unpack data for version 1
     #
     # Parameters::
-    # * *data* (<em>map<Symbol,Object></em>): Data to deserialize
+    # * *data* (_String_): Data to deserialize
     # Result::
     # * _Object_: The unpacked data
     def unpack_data_version_1(data)
-      if (data['shared_objs'].empty?)
-        return deserialize_rec(data['obj'])
+      decoded_data = MessagePack::unpack(data)
+      if (decoded_data['shared_objs'].empty?)
+        return get_original_rec(decoded_data['obj'])
       else
         # We need to replace some data before
-        @serialized_shared_objs = data['shared_objs']
+        @serialized_shared_objs = decoded_data['shared_objs']
         @decoded_shared_objs = {}
-        return deserialize_rec(data['obj'])
+        return get_original_rec(decoded_data['obj'])
       end
     end
 
     private
 
-    # Deserialize recursively a serialized object
+    # Convert back a deserialized object using MessagePack to the original object
     #
     # Parameters::
-    # * *obj* (_String_): The serialized object
+    # * *obj* (_Object_): The decoded object
     # * *container_to_fill* (_Object_): The container to fill with the decoded data. If nil, a new object will be created. [default = nil]
     # Result::
-    # * _Object_: The deserialized object
-    def deserialize_rec(obj, container_to_fill = nil)
-      decoded_obj = MessagePack::unpack(obj)
-      #puts "Decoded: #{decoded_obj.inspect}"
+    # * _Object_: The original object
+    def get_original_rec(decoded_obj, container_to_fill = nil)
       if (decoded_obj.is_a?(Array))
         if (container_to_fill == nil)
-          return decoded_obj.map { |serialized_item| deserialize_rec(serialized_item) }
+          return decoded_obj.map { |serialized_item| get_original_rec(serialized_item) }
         else
           decoded_obj.each do |item|
-            container_to_fill << deserialize_rec(item)
+            container_to_fill << get_original_rec(item)
           end
           return container_to_fill
         end
@@ -71,7 +74,7 @@ module RubySerial
             # Normal hash
             hash_obj = ((container_to_fill == nil) ? {} : container_to_fill)
             decoded_obj.each do |serialized_key, serialized_value|
-              hash_obj[deserialize_rec(serialized_key)] = deserialize_rec(serialized_value)
+              hash_obj[get_original_rec(serialized_key)] = get_original_rec(serialized_value)
             end
             return hash_obj
           else
@@ -80,7 +83,7 @@ module RubySerial
             new_obj = ((container_to_fill == nil) ? eval(decoded_obj[OBJECT_CLASSNAME_REFERENCE]).new : container_to_fill)
             instance_vars = {}
             decoded_obj[OBJECT_CONTENT_REFERENCE].each do |var_name, serialized_value|
-              instance_vars[var_name] = deserialize_rec(serialized_value)
+              instance_vars[var_name] = get_original_rec(serialized_value)
             end
             new_obj.set_instance_vars_from_rubyserial(instance_vars)
             return new_obj
@@ -91,7 +94,7 @@ module RubySerial
           if (@decoded_shared_objs[obj_id] == nil)
             # Instantiate it already for cyclic decoding (avoids infinite loops)
             @decoded_shared_objs[obj_id] = eval(@serialized_shared_objs[obj_id][0]).new
-            deserialize_rec(@serialized_shared_objs[obj_id][1], @decoded_shared_objs[obj_id])
+            get_original_rec(@serialized_shared_objs[obj_id][1], @decoded_shared_objs[obj_id])
           end
           return @decoded_shared_objs[obj_id]
         end

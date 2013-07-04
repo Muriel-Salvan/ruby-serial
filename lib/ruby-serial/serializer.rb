@@ -28,10 +28,8 @@ module RubySerial
     def dump
       pack_method_name = "pack_data_version_#{@version}".to_sym
       raise "Unknown version #{@version}." if (!self.respond_to?(pack_method_name))
-      data = self.send(pack_method_name)
-      data['version'] = @version
 
-      return data.to_msgpack
+      return "#{@version}\x00#{self.send(pack_method_name)}"
     end
 
     protected
@@ -51,14 +49,14 @@ module RubySerial
       @shared_objs.each do |object_id, false_value|
         @shared_objs_to_store[object_id] = [
           @objs[object_id].class.name,
-          serialize_rec(@objs[object_id], false)
+          get_msgpack_compatible_rec(@objs[object_id], false)
         ]
       end
       #puts "Found #{@shared_objs_to_store.size} shared objects to be stored"
       return {
-        'obj' => serialize_rec(@obj),
+        'obj' => get_msgpack_compatible_rec(@obj),
         'shared_objs' => @shared_objs_to_store
-      }
+      }.to_msgpack
     end
 
     private
@@ -103,55 +101,55 @@ module RubySerial
       end
     end
 
-    # Serialize the object recursively (itself and all its descendants)
+    # Convert the object (and all its descendants) to be serializable using to_msgpack without loosing information.
     #
     # Parameters::
-    # * *obj* (_Object_): Object to serialize
+    # * *obj* (_Object_): Object to convert
     # * *check_shared* (_Boolean_): Do we check whether this object is shared? [default = true]
     # Result::
-    # * _String_: The serialized object
-    def serialize_rec(obj, check_shared = true)
+    # * _Object_: The object ready to be serialized
+    def get_msgpack_compatible_rec(obj, check_shared = true)
       if ((obj.is_a?(Fixnum)) or
           (obj.is_a?(Bignum)) or
           (obj.is_a?(Float)) or
           (obj == nil) or
           (obj == true) or
           (obj == false))
-        return obj.to_msgpack
+        return obj
       elsif (obj.is_a?(Symbol))
         # TODO (MessagePack): Remove this if MessagePack handles Symbols one day
         return {
           OBJECT_CLASSNAME_REFERENCE => SYMBOL_ID,
           OBJECT_CONTENT_REFERENCE => obj.to_s
-        }.to_msgpack
+        }
       elsif (check_shared and
              (@shared_objs[obj.object_id] != nil))
         # This object is shared: store its object_id only
         return {
           OBJECT_ID_REFERENCE => obj.object_id
-        }.to_msgpack
+        }
       elsif (obj.is_a?(Array))
         # First serialize its items
-        return obj.map { |item| serialize_rec(item) }.to_msgpack
+        return obj.map { |item| get_msgpack_compatible_rec(item) }
       elsif (obj.is_a?(Hash))
         # First serialize its items
         hash_to_store = {}
         obj.each do |key, value|
-          hash_to_store[serialize_rec(key)] = serialize_rec(value)
+          hash_to_store[get_msgpack_compatible_rec(key)] = get_msgpack_compatible_rec(value)
         end
-        return hash_to_store.to_msgpack
+        return hash_to_store
       elsif (obj.is_a?(String))
-        return obj.to_msgpack
+        return obj
       else
         # Handle other objects
         serialized_instance_vars = {}
         obj.get_instance_vars_to_rubyserial.each do |var_name, value|
-          serialized_instance_vars[var_name] = serialize_rec(value)
+          serialized_instance_vars[var_name] = get_msgpack_compatible_rec(value)
         end
         return {
           OBJECT_CLASSNAME_REFERENCE => obj.class.name,
           OBJECT_CONTENT_REFERENCE => serialized_instance_vars
-        }.to_msgpack
+        }
       end
     end
 
