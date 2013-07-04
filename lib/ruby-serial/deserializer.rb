@@ -55,7 +55,7 @@ module RubySerial
       #puts "Decoded: #{decoded_obj.inspect}"
       if (decoded_obj.is_a?(Array))
         if (container_to_fill == nil)
-          return decoded_obj.map { |item| deserialize_rec(item) }
+          return decoded_obj.map { |serialized_item| deserialize_rec(serialized_item) }
         else
           decoded_obj.each do |item|
             container_to_fill << deserialize_rec(item)
@@ -75,8 +75,15 @@ module RubySerial
             end
             return hash_obj
           else
-            # TODO: Handle instantiating
-            raise 'TODO'
+            # We deserialize a home-made object
+            # Instantiate the needed class
+            new_obj = ((container_to_fill == nil) ? eval(decoded_obj[OBJECT_CLASSNAME_REFERENCE]).new : container_to_fill)
+            instance_vars = {}
+            decoded_obj[OBJECT_CONTENT_REFERENCE].each do |var_name, serialized_value|
+              instance_vars[var_name] = deserialize_rec(serialized_value)
+            end
+            new_obj.set_instance_vars_from_rubyserial(instance_vars)
+            return new_obj
           end
         else
           # We have a reference to a shared object

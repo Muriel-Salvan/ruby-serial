@@ -91,7 +91,10 @@ module RubySerial
               gather_ids_rec(key)
             end
           else
-            # TODO: Handle objects that will be serialized by to_msgpack
+            # Handle other objects
+            obj.get_instance_vars_to_rubyserial.each do |var_name, var|
+              gather_ids_rec(var)
+            end
           end
         else
           # This object is shared.
@@ -137,9 +140,18 @@ module RubySerial
           hash_to_store[serialize_rec(key)] = serialize_rec(value)
         end
         return hash_to_store.to_msgpack
+      elsif (obj.is_a?(String))
+        return obj.to_msgpack
       else
         # Handle other objects
-        return obj.to_msgpack
+        serialized_instance_vars = {}
+        obj.get_instance_vars_to_rubyserial.each do |var_name, value|
+          serialized_instance_vars[var_name] = serialize_rec(value)
+        end
+        return {
+          OBJECT_CLASSNAME_REFERENCE => obj.class.name,
+          OBJECT_CONTENT_REFERENCE => serialized_instance_vars
+        }.to_msgpack
       end
     end
 

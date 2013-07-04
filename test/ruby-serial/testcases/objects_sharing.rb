@@ -25,7 +25,15 @@ module RubySerialTest
           assert_equal obj2[1].object_id, obj2[2].object_id
         end
 
-        # TODO: Shared in objects' attributes
+        # Simple sharing in an Object
+        def_test "object_#{data_type_name}" do
+          obj1 = Common::DataContainer.new
+          obj1.attr1 = var
+          obj1.attr2 = var
+          obj2 = ruby_serial(obj1)
+          assert_equal obj1, obj2
+          assert_equal obj2.attr1.object_id, obj2.attr2.object_id
+        end
 
         # Sharing at different levels of an Array
         def_test "array_levels_#{data_type_name}" do
@@ -55,7 +63,20 @@ module RubySerialTest
           assert_equal obj2[1].object_id, obj2[3][5][6].object_id
         end
 
-        # TODO: Shared in objects' attributes
+        # Sharing at different levels of an Object
+        def_test "object_levels_#{data_type_name}" do
+          obj1 = Common::DataContainer.new
+          obj1.attr1 = var
+          obj1.attr2 = Common::DataContainer.new
+          obj1.attr2.attr1 = var
+          obj1.attr3 = Common::DataContainer.new
+          obj1.attr3.attr1 = Common::DataContainer.new
+          obj1.attr3.attr1.attr2 = var
+          obj2 = ruby_serial(obj1)
+          assert_equal obj1, obj2
+          assert_equal obj2.attr1.object_id, obj2.attr2.attr1.object_id
+          assert_equal obj2.attr1.object_id, obj2.attr3.attr1.attr2.object_id
+        end
 
       end
 
@@ -144,7 +165,21 @@ module RubySerialTest
         end
       end
 
-      # TODO: Shared in objects' attributes
+      def_test 'share_all_in_object' do
+        obj1 = Common::GenericContainer.new
+
+        nbr_repeatitions = 5
+        nbr_repeatitions.times do |idx_repeatition|
+          obj1.fill(Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS, "repeat_#{idx_repeatition}_")
+        end
+        obj2 = ruby_serial(obj1)
+        assert_equal obj1, obj2
+        Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.keys.each do |var_name|
+          (nbr_repeatitions-1).times do |idx_repeatition|
+            assert_equal obj2.instance_variable_get("@repeat_0_#{var_name}".to_sym).object_id, obj2.instance_variable_get("@repeat_#{idx_repeatition+1}_#{var_name}".to_sym).object_id
+          end
+        end
+      end
 
       def_test 'cyclic_share_in_array' do
         obj1 = []
@@ -317,7 +352,72 @@ module RubySerialTest
         assert_equal new_shared_obj2.object_id, new_shared_obj1.keys.select { |key| key != 5 }[0].keys.select { |key| key != 8 }[0].keys.select { |key| key != 5 }[0].object_id
       end
 
-      # TODO: Shared in objects' attributes
+      def_test 'cyclic_share_in_object' do
+        obj1 = Common::DataContainer.new
+        obj1.attr1 = obj1
+        obj2 = ruby_serial(obj1)
+        # TODO: Implement a correct == operator immune to cycles and uncomment the following
+        #assert_equal obj1, obj2
+        assert_equal obj2.object_id, obj2.attr1.object_id
+      end
+
+      def_test 'cyclic_share_deeper_in_object' do
+        shared_obj = Common::DataContainer.new
+        shared_obj.attr1 = Common::DataContainer.new
+        shared_obj.attr1.attr2 = shared_obj
+        obj1 = Common::DataContainer.new
+        obj1.attr1 = 42
+        obj1.attr2 = shared_obj
+        # obj1 = {
+        #   :attr1 => 42,
+        #   :attr2 => *{
+        #     :attr1 => {
+        #       :attr2 => *
+        #     }
+        #   }
+        # }
+        obj2 = ruby_serial(obj1)
+        # TODO: Implement a correct == operator immune to cycles and uncomment the following
+        #assert_equal obj1, obj2
+        assert_equal obj2.attr2.object_id, obj2.attr2.attr1.attr2.object_id
+      end
+
+      def_test 'cross_cyclic_share_in_object' do
+        shared_obj1 = Common::DataContainer.new
+        shared_obj1.attr1 = 2
+        shared_obj2 = Common::DataContainer.new
+        shared_obj1.attr2 = shared_obj2
+        shared_obj2.attr1 = 3
+        shared_obj2.attr2 = shared_obj1
+        obj1 = Common::DataContainer.new
+        obj1.attr1 = 1
+        obj1.attr2 = shared_obj1
+        obj1.attr3 = shared_obj2
+        # obj1 = {
+        #   :attr1 => 1,
+        #   :attr2 => a{
+        #     :attr1 => 2,
+        #     :attr2 => b{
+        #       :attr1 => 3,
+        #       :attr2 => a{
+        #         :attr1 => 2
+        #         :attr2 => b
+        #       }
+        #     }
+        #   },
+        #   :attr3 => b{
+        #     :attr1 => 3,
+        #     :attr2 => a
+        #   }
+        # }
+        obj2 = ruby_serial(obj1)
+        # TODO: Implement a correct == operator immune to cycles and uncomment the following
+        #assert_equal obj1, obj2
+        assert_equal obj2.attr2.object_id, obj2.attr2.attr2.attr2.object_id
+        assert_equal obj2.attr2.object_id, obj2.attr3.attr2.object_id
+        assert_equal obj2.attr3.object_id, obj2.attr2.attr2.object_id
+        assert_equal obj2.attr3.object_id, obj2.attr2.attr2.attr2.attr2.object_id
+      end
 
     end
 

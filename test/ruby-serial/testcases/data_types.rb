@@ -55,6 +55,12 @@ module RubySerialTest
         assert_equal hash, ruby_serial(hash)
       end
 
+      def_test 'all_in_object' do
+        obj = Common::GenericContainer.new
+        obj.fill(Common::DATA_SAMPLES)
+        assert_equal obj, ruby_serial(obj)
+      end
+
     end
 
   end
