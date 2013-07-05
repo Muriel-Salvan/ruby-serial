@@ -5,8 +5,23 @@ class Object
   # Result::
   # * <em>map<String,Object></em>: Set of instance variables, per name
   def get_instance_vars_to_rubyserial
+    # Compute the list of attributes to serialize
+    instance_var_names = []
+    klass = self.class
+    if (klass.rubyserial_only_lst != nil)
+      if (klass.dont_rubyserial_lst != nil)
+        instance_var_names = klass.rubyserial_only_lst - klass.dont_rubyserial_lst
+      else
+        instance_var_names = klass.rubyserial_only_lst
+      end
+    elsif (klass.dont_rubyserial_lst != nil)
+      instance_var_names = self.instance_variables - klass.dont_rubyserial_lst
+    else
+      instance_var_names = self.instance_variables
+    end
+    # Compute the resulting map
     instance_vars = {}
-    self.instance_variables.each do |sym_var|
+    instance_var_names.each do |sym_var|
       instance_vars[sym_var.to_s] = self.instance_variable_get(sym_var)
     end
     return instance_vars

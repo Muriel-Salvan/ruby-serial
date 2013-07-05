@@ -1,4 +1,5 @@
 require 'msgpack'
+require 'ruby-serial/_class'
 require 'ruby-serial/_object'
 require 'ruby-serial/common'
 require 'ruby-serial/serializer'

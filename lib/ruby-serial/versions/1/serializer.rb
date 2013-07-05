@@ -14,7 +14,7 @@ module RubySerial
           # * *obj* (_Object_): Object to pack
           # Result::
           # * _String_: The serialized data
-          def pack_data
+          def pack_data(obj)
             # First look for shared objects
             # Set of objects parsed, per object_id
             @objs = {}
