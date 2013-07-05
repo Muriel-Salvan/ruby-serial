@@ -41,16 +41,16 @@ module RubySerialTest
 
       def_test 'all_in_hash_key' do
         hash = {}
-        Common::DATA_SAMPLES.values.each do |var|
-          hash[var] = rand
+        Common::DATA_SAMPLES.each do |var_name, var|
+          hash[var] = var_name
         end
         assert_equal hash, ruby_serial(hash)
       end
 
       def_test 'all_in_hash_value' do
         hash = {}
-        Common::DATA_SAMPLES.values.each do |var|
-          hash[var.object_id] = var
+        Common::DATA_SAMPLES.each do |var_name, var|
+          hash[var_name] = var
         end
         assert_equal hash, ruby_serial(hash)
       end

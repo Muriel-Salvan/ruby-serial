@@ -6,7 +6,7 @@ module RubySerial
     # Constructor
     #
     # Parameters::
-    # * *data* (_String_): Serialized data
+    # * *data* (_String_): Serialized data (should be BINARY encoding only)
     def initialize(data)
       @data = data
     end

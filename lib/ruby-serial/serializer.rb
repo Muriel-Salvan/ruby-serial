@@ -29,7 +29,7 @@ module RubySerial
       pack_method_name = "pack_data_version_#{@version}".to_sym
       raise "Unknown version #{@version}." if (!self.respond_to?(pack_method_name))
 
-      return "#{@version}\x00#{self.send(pack_method_name)}"
+      return "#{@version}\x00#{self.send(pack_method_name)}".force_encoding(Encoding::BINARY)
     end
 
     protected
@@ -56,7 +56,7 @@ module RubySerial
       return {
         'obj' => get_msgpack_compatible_rec(@obj),
         'shared_objs' => @shared_objs_to_store
-      }.to_msgpack
+      }.to_msgpack.force_encoding(Encoding::BINARY)
     end
 
     private
