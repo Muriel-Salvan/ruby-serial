@@ -1,5 +1,9 @@
 = Ruby-Serial Release History
 
+== 1.0.1.20130709 (Beta)
+
+* Added support for Encoding objects
+
 == 1.0.0.20130705 (Beta)
 
 * Initial public release.
