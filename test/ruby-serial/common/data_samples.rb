@@ -71,7 +71,8 @@ module RubySerialTest
       'Symbol' => :TestSymbol,
       'Nil' => nil,
       'True' => true,
-      'False' => false
+      'False' => false,
+      'Encoding' => Encoding::UTF_8
     }.merge(DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS)
 
     # Versions to be tested

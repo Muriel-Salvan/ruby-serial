@@ -47,6 +47,7 @@ module RubySerial
                 (!obj.is_a?(Bignum)) and
                 (!obj.is_a?(Float)) and
                 (!obj.is_a?(Symbol)) and
+                (!obj.is_a?(Encoding)) and
                 (obj != nil) and
                 (obj != true) and
                 (obj != false))
@@ -95,8 +96,13 @@ module RubySerial
             elsif (obj.is_a?(Symbol))
               # TODO (MessagePack): Remove this if MessagePack handles Symbols one day
               return {
-                OBJECT_CLASSNAME_REFERENCE => SYMBOL_ID,
+                OBJECT_CLASSNAME_REFERENCE => CLASS_ID_SYMBOL,
                 OBJECT_CONTENT_REFERENCE => obj.to_s
+              }
+            elsif (obj.is_a?(Encoding))
+              return {
+                OBJECT_CLASSNAME_REFERENCE => CLASS_ID_ENCODING,
+                OBJECT_CONTENT_REFERENCE => obj.name
               }
             elsif (check_shared and
                    (@shared_objs[obj.object_id] != nil))

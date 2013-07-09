@@ -103,13 +103,11 @@ module RubySerialTest
       def ruby_serial(var)
         serialized_data_from_disk = @testcase_serialized_data[@serial_idx]
         serialized_data_from_disk.force_encoding(Encoding::BINARY) if (serialized_data_from_disk != nil)
-        serialized_data = (serialized_data_from_disk == nil) ? RubySerial::dump(var, :version => @version) : serialized_data_from_disk
+        serialized_data = (Common::generate_mode or (serialized_data_from_disk == nil)) ? RubySerial::dump(var, :version => @version) : serialized_data_from_disk
         # Serialized data can be different for the same object (depends in which order Hashes' keys are parsed)
         # Therefore we can't compare serialized data directly between reference file and a call to RubySerial::dump
-        if (serialized_data_from_disk == nil)
-          @testcase_serialized_data[@serial_idx] = serialized_data if Common::generate_mode
-          Common::nbr_missing_serialized_data += 1
-        end
+        @testcase_serialized_data[@serial_idx] = serialized_data if Common::generate_mode
+        Common::nbr_missing_serialized_data += 1 if (serialized_data_from_disk == nil)
         @serial_idx += 1
         return RubySerial::load(serialized_data)
       end

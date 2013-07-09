@@ -48,8 +48,10 @@ module RubySerial
             elsif (decoded_obj.is_a?(Hash))
               # Check for special hashes
               if (decoded_obj[OBJECT_ID_REFERENCE] == nil)
-                if (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == SYMBOL_ID)
+                if (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_SYMBOL)
                   return decoded_obj[OBJECT_CONTENT_REFERENCE].to_sym
+                elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_ENCODING)
+                  return Encoding::find(decoded_obj[OBJECT_CONTENT_REFERENCE])
                 elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == nil)
                   # Normal hash
                   hash_obj = ((container_to_fill == nil) ? {} : container_to_fill)
