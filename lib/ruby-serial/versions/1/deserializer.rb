@@ -62,7 +62,7 @@ module RubySerial
                 else
                   # We deserialize a home-made object
                   # Instantiate the needed class
-                  new_obj = ((container_to_fill == nil) ? eval(decoded_obj[OBJECT_CLASSNAME_REFERENCE]).new : container_to_fill)
+                  new_obj = ((container_to_fill == nil) ? eval(decoded_obj[OBJECT_CLASSNAME_REFERENCE]).allocate : container_to_fill)
                   instance_vars = {}
                   decoded_obj[OBJECT_CONTENT_REFERENCE].each do |var_name, serialized_value|
                     instance_vars[var_name] = get_original_rec(serialized_value)
@@ -75,7 +75,7 @@ module RubySerial
                 obj_id = decoded_obj[OBJECT_ID_REFERENCE]
                 if (@decoded_shared_objs[obj_id] == nil)
                   # Instantiate it already for cyclic decoding (avoids infinite loops)
-                  @decoded_shared_objs[obj_id] = eval(@serialized_shared_objs[obj_id][0]).new
+                  @decoded_shared_objs[obj_id] = eval(@serialized_shared_objs[obj_id][0]).allocate
                   get_original_rec(@serialized_shared_objs[obj_id][1], @decoded_shared_objs[obj_id])
                 end
                 return @decoded_shared_objs[obj_id]

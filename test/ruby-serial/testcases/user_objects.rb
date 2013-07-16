@@ -137,6 +137,13 @@ module RubySerialTest
         assert_equal nil, obj2.attr3
       end
 
+      # Serialize objects with a constructor having mandatory parameters
+      def_test 'with_constructor' do
+        obj1 = Common::DataContainerWithConstructor.new(256)
+        obj2 = ruby_serial(obj1)
+        assert_equal 256, obj2.attr1
+      end
+
     end
 
   end

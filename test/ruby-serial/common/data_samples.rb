@@ -52,11 +52,20 @@ module RubySerialTest
 
     end
 
+    class DataContainerWithConstructor < DataContainer
+      def initialize(attr1)
+        super()
+        @attr1 = attr1
+      end
+    end
+
+
     # Objects that can share the same reference when duplicated (even as Hash keys)
     DATA_SAMPLES_SHAREABLE = {
       'Array' => [ 1, 2, 3 ],
       'Hash' => { 1 => 2, 3 => 4 },
-      'Object' => DataContainer.new
+      'Object' => DataContainer.new,
+      'ObjectWithConstructor' => DataContainerWithConstructor.new(256)
     }
 
     # Objects that can share the same reference when duplicated except when used as Hash keys
