@@ -52,6 +52,9 @@ module RubySerial
                   return decoded_obj[OBJECT_CONTENT_REFERENCE].to_sym
                 elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_ENCODING)
                   return Encoding::find(decoded_obj[OBJECT_CONTENT_REFERENCE])
+                elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_RANGE)
+                  serialized_first, serialized_last, exclude_end = decoded_obj[OBJECT_CONTENT_REFERENCE]
+                  return (exclude_end ? (get_original_rec(serialized_first)...get_original_rec(serialized_last)) : (get_original_rec(serialized_first)..get_original_rec(serialized_last)) )
                 elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == nil)
                   # Normal hash
                   hash_obj = ((container_to_fill == nil) ? {} : container_to_fill)

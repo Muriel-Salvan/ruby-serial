@@ -12,5 +12,6 @@ module RubySerial
   # No duplicates allowed.
   CLASS_ID_SYMBOL = "\x00\xEE".force_encoding(Encoding::UTF_8)
   CLASS_ID_ENCODING = "\x00\xDD".force_encoding(Encoding::UTF_8)
+  CLASS_ID_RANGE = "\x00\xCC".force_encoding(Encoding::UTF_8)
 
 end

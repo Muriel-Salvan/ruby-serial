@@ -93,8 +93,10 @@ module RubySerial
                 (obj == true) or
                 (obj == false))
               return obj
+            #
+            # First handle objects that are not shareable
+            #
             elsif (obj.is_a?(Symbol))
-              # TODO (MessagePack): Remove this if MessagePack handles Symbols one day
               return {
                 OBJECT_CLASSNAME_REFERENCE => CLASS_ID_SYMBOL,
                 OBJECT_CONTENT_REFERENCE => obj.to_s
@@ -104,12 +106,18 @@ module RubySerial
                 OBJECT_CLASSNAME_REFERENCE => CLASS_ID_ENCODING,
                 OBJECT_CONTENT_REFERENCE => obj.name
               }
+            #
+            # Handle shared objects
+            #
             elsif (check_shared and
                    (@shared_objs[obj.object_id] != nil))
               # This object is shared: store its object_id only
               return {
                 OBJECT_ID_REFERENCE => obj.object_id
               }
+            #
+            # Handle shareable objects
+            #
             elsif (obj.is_a?(Array))
               # First serialize its items
               return obj.map { |item| get_msgpack_compatible_rec(item) }
@@ -122,6 +130,11 @@ module RubySerial
               return hash_to_store
             elsif (obj.is_a?(String))
               return obj
+            elsif (obj.is_a?(Range))
+              return {
+                OBJECT_CLASSNAME_REFERENCE => CLASS_ID_RANGE,
+                OBJECT_CONTENT_REFERENCE => [ get_msgpack_compatible_rec(obj.first), get_msgpack_compatible_rec(obj.last), obj.exclude_end? ]
+              }
             else
               # Handle other objects
               serialized_instance_vars = {}
