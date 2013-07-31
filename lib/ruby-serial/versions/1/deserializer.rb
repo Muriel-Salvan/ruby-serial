@@ -48,14 +48,15 @@ module RubySerial
             elsif (decoded_obj.is_a?(Hash))
               # Check for special hashes
               if (decoded_obj[OBJECT_ID_REFERENCE] == nil)
-                if (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_SYMBOL)
+                case decoded_obj[OBJECT_CLASSNAME_REFERENCE]
+                when CLASS_ID_SYMBOL
                   return decoded_obj[OBJECT_CONTENT_REFERENCE].to_sym
-                elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_ENCODING)
+                when CLASS_ID_ENCODING
                   return Encoding::find(decoded_obj[OBJECT_CONTENT_REFERENCE])
-                elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == CLASS_ID_RANGE)
+                when CLASS_ID_RANGE
                   serialized_first, serialized_last, exclude_end = decoded_obj[OBJECT_CONTENT_REFERENCE]
                   return (exclude_end ? (get_original_rec(serialized_first)...get_original_rec(serialized_last)) : (get_original_rec(serialized_first)..get_original_rec(serialized_last)) )
-                elsif (decoded_obj[OBJECT_CLASSNAME_REFERENCE] == nil)
+                when nil
                   # Normal hash
                   hash_obj = ((container_to_fill == nil) ? {} : container_to_fill)
                   decoded_obj.each do |serialized_key, serialized_value|
@@ -71,6 +72,8 @@ module RubySerial
                     instance_vars[var_name] = get_original_rec(serialized_value)
                   end
                   new_obj.set_instance_vars_from_rubyserial(instance_vars)
+                  # If there is an onload callback, call it
+                  new_obj.rubyserial_onload if (new_obj.respond_to?(:rubyserial_onload))
                   return new_obj
                 end
               else

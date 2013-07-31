@@ -137,6 +137,8 @@ module RubySerial
               }
             else
               # Handle other objects
+              # If there is an ondump callback, call it
+              obj.rubyserial_ondump if (obj.respond_to?(:rubyserial_ondump))
               serialized_instance_vars = {}
               obj.get_instance_vars_to_rubyserial.each do |var_name, value|
                 serialized_instance_vars[var_name] = get_msgpack_compatible_rec(value)

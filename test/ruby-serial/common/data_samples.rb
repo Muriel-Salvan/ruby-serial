@@ -59,6 +59,46 @@ module RubySerialTest
       end
     end
 
+    class DataContainerWithOnDump < DataContainer
+
+      def initialize
+        super
+        @ondump_called = false
+      end
+
+      def ondump_called?
+        return @ondump_called
+      end
+
+      def rubyserial_ondump
+        # Create a new instance variable
+        @ondump_called = true
+      end
+
+    end
+
+    class DataContainerWithOnLoad < DataContainer
+
+      def initialize
+        super
+        @onload_called = false
+        @loaded_vars = nil
+      end
+
+      def onload_called?
+        return @onload_called
+      end
+
+      attr_reader :loaded_vars
+
+      def rubyserial_onload
+        # Create a new instance variable
+        @onload_called = true
+        @loaded_vars = instance_variables.clone
+      end
+
+    end
+
 
     # Objects that can share the same reference when duplicated (even as Hash keys)
     DATA_SAMPLES_SHAREABLE = {

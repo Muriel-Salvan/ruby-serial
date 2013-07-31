@@ -144,6 +144,45 @@ module RubySerialTest
         assert_equal 256, obj2.attr1
       end
 
+      # Serialize inherited attributes
+      class Serialized_Inheritance < Common::DataContainer
+        attr_accessor :attr4
+        attr_accessor :attr5
+        attr_accessor :attr6
+        def initialize
+          super
+          @attr4 = 42
+          @attr5 = 'A new string again'
+          @attr6 = nil
+        end
+        def to_a
+          return super + [ @attr4, @attr5, @attr6 ]
+        end
+      end
+      def_test 'with_inheritance' do
+        obj1 = Serialized_Inheritance.new
+        obj2 = ruby_serial(obj1)
+        assert_equal obj1, obj2
+      end
+
+      # Serialize objects with an ondump method
+      def_test 'with_ondump' do
+        obj1 = Common::DataContainerWithOnDump.new
+        obj2 = ruby_serial(obj1)
+        assert_equal obj1, obj2
+        assert_equal true, obj1.ondump_called?
+      end
+
+      # Serialize objects with an onload method
+      def_test 'with_onload' do
+        obj1 = Common::DataContainerWithOnLoad.new
+        obj2 = ruby_serial(obj1)
+        assert_equal obj1, obj2
+        assert_equal false, obj1.onload_called?
+        assert_equal true, obj2.onload_called?
+        assert_equal obj1.instance_variables, obj2.loaded_vars
+      end
+
     end
 
   end
