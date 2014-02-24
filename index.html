@@ -59,44 +59,45 @@
 
 <p>Its usage is the same as Marshal library:</p>
 
-<pre><code>require 'ruby-serial' 
-# Create example
-class User
-  attr_accessor :name
-  attr_accessor :comment
-  def ==(other)
-    other.is_a?(User) and (@name == other.name) and (@comment == other.comment)
-  end
-end
-shared_obj = 'This string instance will be shared'
-user = User.new
-user.name = 'John'
-user.comment = shared_obj # shared_obj is referenced here
-obj = [
-  'My String',
-  shared_obj, # shared_obj is also referenced here
-  1,
-  user
-]
+<div class="highlight highlight-ruby"><pre><span class="nb">require</span> <span class="s1">'ruby-serial'</span> 
+<span class="c1"># Create example</span>
+<span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:comment</span>
+  <span class="k">def</span> <span class="nf">==</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+    <span class="n">other</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="no">User</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="vi">@name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="vi">@comment</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">comment</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">shared_obj</span> <span class="o">=</span> <span class="s1">'This string instance will be shared'</span>
+<span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+<span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'John'</span>
+<span class="n">user</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">shared_obj</span> <span class="c1"># shared_obj is referenced here</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="o">[</span>
+  <span class="s1">'My String'</span><span class="p">,</span>
+  <span class="n">shared_obj</span><span class="p">,</span> <span class="c1"># shared_obj is also referenced here</span>
+  <span class="mi">1</span><span class="p">,</span>
+  <span class="n">user</span>
+<span class="o">]</span>
 
-# Get obj as a serialized String
-serialized_obj = RubySerial::dump(obj) 
-# Get back our objects from the serialized String
-deserialized_obj = RubySerial::load(serialized_obj) 
-# Both objects are the same
-puts "Same? #{obj == deserialized_obj}"
-# =&gt; true
+<span class="c1"># Get obj as a serialized String</span>
+<span class="n">serialized_obj</span> <span class="o">=</span> <span class="no">RubySerial</span><span class="o">::</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> 
+<span class="c1"># Get back our objects from the serialized String</span>
+<span class="n">deserialized_obj</span> <span class="o">=</span> <span class="no">RubySerial</span><span class="o">::</span><span class="nb">load</span><span class="p">(</span><span class="n">serialized_obj</span><span class="p">)</span> 
+<span class="c1"># Both objects are the same</span>
+<span class="nb">puts</span> <span class="s2">"Same? </span><span class="si">#{</span><span class="n">obj</span> <span class="o">==</span> <span class="n">deserialized_obj</span><span class="si">}</span><span class="s2">"</span>
+<span class="c1"># =&gt; true</span>
 
-# The shared object is still shared!
-puts "Shared? #{deserialized_obj[1].object_id == deserialized_obj[3].comment.object_id}"
-# =&gt; true
-</code></pre>
+<span class="c1"># The shared object is still shared!</span>
+<span class="nb">puts</span> <span class="s2">"Shared? </span><span class="si">#{</span><span class="n">deserialized_obj</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">object_id</span> <span class="o">==</span> <span class="n">deserialized_obj</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">comment</span><span class="o">.</span><span class="n">object_id</span><span class="si">}</span><span class="s2">"</span>
+<span class="c1"># =&gt; true</span>
+</pre></div>
 
 <h3>
 <a name="more-info" class="anchor" href="#more-info"><span class="octicon octicon-link"></span></a>More info</h3>
 
-<p><a href="http://ruby-serial.sourceforge.net">Complete doc over here</a>!
-<a href="http://sourceforge.net/p/ruby-serial/bugs/">Bug tracker</a></p>
+<p><a href="http://ruby-serial.sourceforge.net">Complete doc over here</a>!</p>
+
+<p><a href="http://sourceforge.net/p/ruby-serial/bugs/">Bug tracker</a></p>
 
 <h3>
 <a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h3>
