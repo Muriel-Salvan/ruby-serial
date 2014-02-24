@@ -23,10 +23,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal 1, obj2.attr1
-        assert_equal 2, obj2.attr2
-        assert_equal 3, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal 1, obj2.attr1
+          assert_equal 2, obj2.attr2
+          assert_equal 3, obj2.attr3
+        end
       end
 
       # Don't serialize 1 attribute
@@ -38,10 +39,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal 1, obj2.attr1
-        assert_equal nil, obj2.attr2
-        assert_equal 3, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal 1, obj2.attr1
+          assert_equal nil, obj2.attr2
+          assert_equal 3, obj2.attr3
+        end
       end
 
       # Don't serialize 2 attributes
@@ -54,10 +56,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal nil, obj2.attr1
-        assert_equal nil, obj2.attr2
-        assert_equal 3, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal nil, obj2.attr1
+          assert_equal nil, obj2.attr2
+          assert_equal 3, obj2.attr3
+        end
       end
 
       # Don't serialize a list of attributes
@@ -69,10 +72,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal nil, obj2.attr1
-        assert_equal nil, obj2.attr2
-        assert_equal 3, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal nil, obj2.attr1
+          assert_equal nil, obj2.attr2
+          assert_equal 3, obj2.attr3
+        end
       end
 
       # Serialize only 1 attribute
@@ -84,10 +88,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal nil, obj2.attr1
-        assert_equal 2, obj2.attr2
-        assert_equal nil, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal nil, obj2.attr1
+          assert_equal 2, obj2.attr2
+          assert_equal nil, obj2.attr3
+        end
       end
 
       # Serialize only 2 attributes
@@ -100,10 +105,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal 1, obj2.attr1
-        assert_equal 2, obj2.attr2
-        assert_equal nil, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal 1, obj2.attr1
+          assert_equal 2, obj2.attr2
+          assert_equal nil, obj2.attr3
+        end
       end
 
       # Serialize only a list of attributes
@@ -115,10 +121,11 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal 1, obj2.attr1
-        assert_equal 2, obj2.attr2
-        assert_equal nil, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal 1, obj2.attr1
+          assert_equal 2, obj2.attr2
+          assert_equal nil, obj2.attr3
+        end
       end
 
       # Serialize only a list except some of attributes
@@ -131,17 +138,19 @@ module RubySerialTest
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
-        obj2 = ruby_serial(obj1)
-        assert_equal nil, obj2.attr1
-        assert_equal 2, obj2.attr2
-        assert_equal nil, obj2.attr3
+        ruby_serial(obj1) do |obj2|
+          assert_equal nil, obj2.attr1
+          assert_equal 2, obj2.attr2
+          assert_equal nil, obj2.attr3
+        end
       end
 
       # Serialize objects with a constructor having mandatory parameters
       def_test 'with_constructor' do
         obj1 = Common::DataContainerWithConstructor.new(256)
-        obj2 = ruby_serial(obj1)
-        assert_equal 256, obj2.attr1
+        ruby_serial(obj1) do |obj2|
+          assert_equal 256, obj2.attr1
+        end
       end
 
       # Serialize inherited attributes
@@ -161,26 +170,29 @@ module RubySerialTest
       end
       def_test 'with_inheritance' do
         obj1 = Serialized_Inheritance.new
-        obj2 = ruby_serial(obj1)
-        assert_equal obj1, obj2
+        ruby_serial(obj1) do |obj2|
+          assert_equal obj1, obj2
+        end
       end
 
       # Serialize objects with an ondump method
       def_test 'with_ondump' do
         obj1 = Common::DataContainerWithOnDump.new
-        obj2 = ruby_serial(obj1)
-        assert_equal obj1, obj2
-        assert_equal true, obj1.ondump_called?
+        ruby_serial(obj1) do |obj2|
+          assert_equal obj1, obj2
+          assert_equal true, obj1.ondump_called?
+        end
       end
 
       # Serialize objects with an onload method
       def_test 'with_onload' do
         obj1 = Common::DataContainerWithOnLoad.new
-        obj2 = ruby_serial(obj1)
-        assert_equal obj1, obj2
-        assert_equal false, obj1.onload_called?
-        assert_equal true, obj2.onload_called?
-        assert_equal obj1.instance_variables, obj2.loaded_vars
+        ruby_serial(obj1) do |obj2|
+          assert_equal obj1, obj2
+          assert_equal false, obj1.onload_called?
+          assert_equal true, obj2.onload_called?
+          assert_equal obj1.instance_variables, obj2.loaded_vars
+        end
       end
 
     end

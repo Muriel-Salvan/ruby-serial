@@ -10,6 +10,7 @@ module RubySerialTest
     @serialized_data = {}
     @nbr_missing_serialized_data = 0
     @generate_mode = false
+
     class << self
       attr_accessor :serialized_data
       attr_accessor :nbr_missing_serialized_data
@@ -94,22 +95,44 @@ module RubySerialTest
 
     module InstanceHelpers
 
-      # Serialize and deserialize a variable
+      # Serialize and deserialize a variable.
+      # Calls a code that tests the deserialized variable.
+      # Also calls the test code with a variable deserialized from the disk if there is one.
       #
       # Parameters::
       # * *var* (_Object_): The variable to serialize and deserialize
+      # * _Block_: The code called to test the resulting variable:
+      #   * Parameters::
+      #   * *deserialized_var* (_Object_): The deserialized variable
       # Result::
       # * _Object_: The resulting variable
       def ruby_serial(var)
+        # Serialize/Deserialize variable
+        serialized_data_from_now = RubySerial::dump(var, :version => @version)
+        yield RubySerial::load(serialized_data_from_now)
+        # Get the serialized variable from disk if it exists
         serialized_data_from_disk = @testcase_serialized_data[@serial_idx]
-        serialized_data_from_disk.force_encoding(Encoding::BINARY) if (serialized_data_from_disk != nil)
-        serialized_data = (Common::generate_mode or (serialized_data_from_disk == nil)) ? RubySerial::dump(var, :version => @version) : serialized_data_from_disk
-        # Serialized data can be different for the same object (depends in which order Hashes' keys are parsed)
-        # Therefore we can't compare serialized data directly between reference file and a call to RubySerial::dump
+        if (serialized_data_from_disk == nil)
+          Common::nbr_missing_serialized_data += 1
+        else
+          serialized_data_from_disk.force_encoding(Encoding::BINARY)
+          # Serialized data can be different for the same object (depends in which order Hashes' keys are parsed)
+          # Therefore we can't compare serialized data directly between reference file and a call to RubySerial::dump
+          yield RubySerial::load(serialized_data_from_disk)
+        end
+        serialized_data = (Common::generate_mode or (serialized_data_from_disk == nil)) ? serialized_data_from_now : serialized_data_from_disk
         @testcase_serialized_data[@serial_idx] = serialized_data if Common::generate_mode
-        Common::nbr_missing_serialized_data += 1 if (serialized_data_from_disk == nil)
         @serial_idx += 1
-        return RubySerial::load(serialized_data)
+      end
+
+      # Assert that a variable is untouched by a serialize/deserialize chain
+      #
+      # Parameters::
+      # * *var* (_Object_): The variable to serialize and deserialize
+      def assert_bijection(var)
+        ruby_serial(var) do |deserialized_var|
+          assert_equal var, deserialized_var
+        end
       end
 
     end

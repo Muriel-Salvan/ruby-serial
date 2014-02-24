@@ -61,6 +61,8 @@ module RubySerialTest
 
     class DataContainerWithOnDump < DataContainer
 
+      dont_rubyserial :ondump_called
+
       def initialize
         super
         @ondump_called = false
@@ -71,13 +73,16 @@ module RubySerialTest
       end
 
       def rubyserial_ondump
-        # Create a new instance variable
         @ondump_called = true
+        # Create a new instance variable to be serialized
+        @new_var = 'Variable set by ondump'
       end
 
     end
 
     class DataContainerWithOnLoad < DataContainer
+
+      dont_rubyserial :onload_called
 
       def initialize
         super
@@ -92,7 +97,6 @@ module RubySerialTest
       attr_reader :loaded_vars
 
       def rubyserial_onload
-        # Create a new instance variable
         @onload_called = true
         @loaded_vars = instance_variables.clone
       end
