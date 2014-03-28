@@ -8,7 +8,7 @@ module RubySerialTest
       extend Common::Helpers
 
       # By default all attributes are serialized
-      class Serialized_All
+      class SerializedAll
 
         attr_accessor :attr1
         attr_accessor :attr2
@@ -23,7 +23,7 @@ module RubySerialTest
       end
 
       def_test 'all_attributes' do
-        obj1 = Serialized_All.new
+        obj1 = SerializedAll.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -35,11 +35,11 @@ module RubySerialTest
       end
 
       # Don't serialize 1 attribute
-      class Serialized_Except_1 < Serialized_All
+      class SerializedExcept1 < SerializedAll
         dont_rubyserial :attr2
       end
       def_test 'except_1' do
-        obj1 = Serialized_Except_1.new
+        obj1 = SerializedExcept1.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -51,12 +51,12 @@ module RubySerialTest
       end
 
       # Don't serialize 2 attributes
-      class Serialized_Except_2 < Serialized_All
+      class SerializedExcept2 < SerializedAll
         dont_rubyserial :attr2
         dont_rubyserial :attr1
       end
       def_test 'except_2' do
-        obj1 = Serialized_Except_2.new
+        obj1 = SerializedExcept2.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -68,11 +68,11 @@ module RubySerialTest
       end
 
       # Don't serialize a list of attributes
-      class Serialized_Except_List < Serialized_All
+      class SerializedExceptList < SerializedAll
         dont_rubyserial :attr1, :attr2
       end
       def_test 'except_list' do
-        obj1 = Serialized_Except_List.new
+        obj1 = SerializedExceptList.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -84,11 +84,11 @@ module RubySerialTest
       end
 
       # Serialize only 1 attribute
-      class Serialized_Only_1 < Serialized_All
+      class SerializedOnly1 < SerializedAll
         rubyserial_only :attr2
       end
       def_test 'only_1' do
-        obj1 = Serialized_Only_1.new
+        obj1 = SerializedOnly1.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -100,12 +100,12 @@ module RubySerialTest
       end
 
       # Serialize only 2 attributes
-      class Serialized_Only_2 < Serialized_All
+      class SerializedOnly2 < SerializedAll
         rubyserial_only :attr2
         rubyserial_only :attr1
       end
       def_test 'only_2' do
-        obj1 = Serialized_Only_2.new
+        obj1 = SerializedOnly2.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -117,11 +117,11 @@ module RubySerialTest
       end
 
       # Serialize only a list of attributes
-      class Serialized_Only_List < Serialized_All
+      class SerializedOnlyList < SerializedAll
         rubyserial_only :attr1, :attr2
       end
       def_test 'only_list' do
-        obj1 = Serialized_Only_List.new
+        obj1 = SerializedOnlyList.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -133,12 +133,12 @@ module RubySerialTest
       end
 
       # Serialize only a list except some of attributes
-      class Serialized_Only_Except_List < Serialized_All
+      class SerializedOnlyExceptList < SerializedAll
         rubyserial_only :attr1, :attr2
         dont_rubyserial :attr1
       end
       def_test 'only_except_list' do
-        obj1 = Serialized_Only_Except_List.new
+        obj1 = SerializedOnlyExceptList.new
         obj1.attr1 = 1
         obj1.attr2 = 2
         obj1.attr3 = 3
@@ -158,7 +158,7 @@ module RubySerialTest
       end
 
       # Serialize inherited attributes
-      class Serialized_Inheritance < Common::DataContainer
+      class SerializedInheritance < Common::DataContainer
 
         attr_accessor :attr4
         attr_accessor :attr5
@@ -178,7 +178,7 @@ module RubySerialTest
       end
 
       def_test 'with_inheritance' do
-        obj1 = Serialized_Inheritance.new
+        obj1 = SerializedInheritance.new
         ruby_serial(obj1) do |obj2|
           assert_equal obj1, obj2
         end

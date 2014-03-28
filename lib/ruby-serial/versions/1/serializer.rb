@@ -4,7 +4,7 @@ module RubySerial
 
     module Versions
 
-      module Version_1
+      module Version1
 
         class Serializer
 
@@ -67,7 +67,7 @@ module RubySerial
                   end
                 else
                   # Handle other objects
-                  obj.get_instance_vars_to_rubyserial.each do |var_name, var|
+                  obj.instance_vars_to_be_rubyserialized.each do |var_name, var|
                     gather_ids_rec(var)
                   end
                 end
@@ -140,7 +140,7 @@ module RubySerial
               # If there is an ondump callback, call it
               obj.rubyserial_ondump if obj.respond_to?(:rubyserial_ondump)
               serialized_instance_vars = {}
-              obj.get_instance_vars_to_rubyserial.each do |var_name, value|
+              obj.instance_vars_to_be_rubyserialized.each do |var_name, value|
                 serialized_instance_vars[var_name] = get_msgpack_compatible_rec(value)
               end
               return {

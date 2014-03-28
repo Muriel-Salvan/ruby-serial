@@ -29,7 +29,7 @@ module RubySerial
       serializer = nil
       begin
         require "ruby-serial/versions/#{@version}/serializer"
-        serializer = eval("RubySerial::Serializer::Versions::Version_#{@version}")::Serializer.new
+        serializer = RubySerial::Serializer::Versions.const_get("Version#{@version}")::Serializer.new
       rescue
         raise "Unknown serializer version #{@version}: #{$ERROR_INFO}"
       end

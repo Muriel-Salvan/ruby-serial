@@ -4,7 +4,7 @@ class Object
   #
   # Result::
   # * <em>map<String,Object></em>: Set of instance variables, per name
-  def get_instance_vars_to_rubyserial
+  def instance_vars_to_be_rubyserialized
     # Compute the list of attributes to serialize
     instance_var_names = []
     klass = self.class
@@ -31,7 +31,7 @@ class Object
   #
   # Parameters::
   # * *instance_vars* (<em>map<String,Object></em>): Set of instance variables, per name
-  def set_instance_vars_from_rubyserial(instance_vars)
+  def fill_instance_vars_from_rubyserial(instance_vars)
     instance_vars.each do |var_name, value|
       instance_variable_set(var_name.to_sym, value)
     end

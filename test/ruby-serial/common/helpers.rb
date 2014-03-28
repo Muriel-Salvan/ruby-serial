@@ -25,7 +25,7 @@ module RubySerialTest
 
     # Read serialized data from disk
     def self.read_serialized_data
-      if File.exists?(REFERENCE_FILE)
+      if File.exist?(REFERENCE_FILE)
         File.open(REFERENCE_FILE, 'rb') do |file|
           Common.serialized_data = MessagePack.unpack(file.read)
         end
@@ -114,7 +114,7 @@ module RubySerialTest
         serialized_data_from_disk = @testcase_serialized_data[@serial_idx]
         if serialized_data_from_disk == nil
           Common.nbr_missing_serialized_data += 1
-        else
+        elsif !Common.generate_mode
           serialized_data_from_disk.force_encoding(Encoding::BINARY)
           # Serialized data can be different for the same object (depends in which order Hashes' keys are parsed)
           # Therefore we can't compare serialized data directly between reference file and a call to RubySerial::dump
