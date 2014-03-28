@@ -103,7 +103,6 @@ module RubySerialTest
 
     end
 
-
     # Objects that can share the same reference when duplicated (even as Hash keys)
     DATA_SAMPLES_SHAREABLE = {
       'Array' => [1, 2, 3],

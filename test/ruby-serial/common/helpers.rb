@@ -108,7 +108,7 @@ module RubySerialTest
       # * _Object_: The resulting variable
       def ruby_serial(var)
         # Serialize/Deserialize variable
-        serialized_data_from_now = RubySerial.dump(var, :version => @version)
+        serialized_data_from_now = RubySerial.dump(var, version: @version)
         yield RubySerial.load(serialized_data_from_now)
         # Get the serialized variable from disk if it exists
         serialized_data_from_disk = @testcase_serialized_data[@serial_idx]

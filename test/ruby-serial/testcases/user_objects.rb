@@ -9,15 +9,19 @@ module RubySerialTest
 
       # By default all attributes are serialized
       class Serialized_All
+
         attr_accessor :attr1
         attr_accessor :attr2
         attr_accessor :attr3
+
         def initialize
           @attr1 = nil
           @attr2 = nil
           @attr3 = nil
         end
+
       end
+
       def_test 'all_attributes' do
         obj1 = Serialized_All.new
         obj1.attr1 = 1
@@ -155,19 +159,24 @@ module RubySerialTest
 
       # Serialize inherited attributes
       class Serialized_Inheritance < Common::DataContainer
+
         attr_accessor :attr4
         attr_accessor :attr5
         attr_accessor :attr6
+
         def initialize
           super
           @attr4 = 42
           @attr5 = 'A new string again'
           @attr6 = nil
         end
+
         def to_a
           super + [@attr4, @attr5, @attr6]
         end
+
       end
+
       def_test 'with_inheritance' do
         obj1 = Serialized_Inheritance.new
         ruby_serial(obj1) do |obj2|
