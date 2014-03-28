@@ -8,13 +8,13 @@ class Object
     # Compute the list of attributes to serialize
     instance_var_names = []
     klass = self.class
-    if (klass.rubyserial_only_lst != nil)
-      if (klass.dont_rubyserial_lst != nil)
+    if klass.rubyserial_only_lst != nil
+      if klass.dont_rubyserial_lst != nil
         instance_var_names = klass.rubyserial_only_lst - klass.dont_rubyserial_lst
       else
         instance_var_names = klass.rubyserial_only_lst
       end
-    elsif (klass.dont_rubyserial_lst != nil)
+    elsif klass.dont_rubyserial_lst != nil
       instance_var_names = instance_variables - klass.dont_rubyserial_lst
     else
       instance_var_names = instance_variables

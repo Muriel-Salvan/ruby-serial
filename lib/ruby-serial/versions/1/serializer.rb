@@ -43,24 +43,24 @@ module RubySerial
           # Parameters::
           # * *obj* (_Object_): The object to inspect
           def gather_ids_rec(obj)
-            if ((!obj.is_a?(Fixnum)) &&
-                (!obj.is_a?(Bignum)) &&
-                (!obj.is_a?(Float)) &&
-                (!obj.is_a?(Symbol)) &&
-                (!obj.is_a?(Encoding)) &&
-                (obj != nil) &&
-                (obj != true) &&
-                (obj != false))
+            if !obj.is_a?(Fixnum) &&
+               !obj.is_a?(Bignum) &&
+               !obj.is_a?(Float) &&
+               !obj.is_a?(Symbol) &&
+               !obj.is_a?(Encoding) &&
+               obj != nil &&
+               obj != true &&
+               obj != false
               # Check if obj id is shared
-              if (@objs[obj.object_id] == nil)
+              if @objs[obj.object_id] == nil
                 # First time we encounter this object
                 @objs[obj.object_id] = obj
                 # See other references
-                if (obj.is_a?(Array))
+                if obj.is_a?(Array)
                   obj.each_with_index do |item, idx|
                     gather_ids_rec(item)
                   end
-                elsif (obj.is_a?(Hash))
+                elsif obj.is_a?(Hash)
                   obj.each do |key, value|
                     gather_ids_rec(value)
                     gather_ids_rec(key)
@@ -86,22 +86,22 @@ module RubySerial
           # Result::
           # * _Object_: The object ready to be serialized
           def get_msgpack_compatible_rec(obj, check_shared = true)
-            if ((obj.is_a?(Fixnum)) ||
-                (obj.is_a?(Bignum)) ||
-                (obj.is_a?(Float)) ||
-                (obj == nil) ||
-                (obj == true) ||
-                (obj == false))
+            if obj.is_a?(Fixnum) ||
+               obj.is_a?(Bignum) ||
+               obj.is_a?(Float) ||
+               obj == nil ||
+               obj == true ||
+               obj == false
               return obj
             #
             # First handle objects that are not shareable
             #
-            elsif (obj.is_a?(Symbol))
+            elsif obj.is_a?(Symbol)
               return {
                 OBJECT_CLASSNAME_REFERENCE => CLASS_ID_SYMBOL,
                 OBJECT_CONTENT_REFERENCE => obj.to_s
               }
-            elsif (obj.is_a?(Encoding))
+            elsif obj.is_a?(Encoding)
               return {
                 OBJECT_CLASSNAME_REFERENCE => CLASS_ID_ENCODING,
                 OBJECT_CONTENT_REFERENCE => obj.name
@@ -109,8 +109,8 @@ module RubySerial
             #
             # Handle shared objects
             #
-            elsif (check_shared &&
-                   (@shared_objs[obj.object_id] != nil))
+            elsif check_shared &&
+                  @shared_objs[obj.object_id] != nil
               # This object is shared: store its object_id only
               return {
                 OBJECT_ID_REFERENCE => obj.object_id
@@ -118,19 +118,19 @@ module RubySerial
             #
             # Handle shareable objects
             #
-            elsif (obj.is_a?(Array))
+            elsif obj.is_a?(Array)
               # First serialize its items
               return obj.map { |item| get_msgpack_compatible_rec(item) }
-            elsif (obj.is_a?(Hash))
+            elsif obj.is_a?(Hash)
               # First serialize its items
               hash_to_store = {}
               obj.each do |key, value|
                 hash_to_store[get_msgpack_compatible_rec(key)] = get_msgpack_compatible_rec(value)
               end
               return hash_to_store
-            elsif (obj.is_a?(String))
+            elsif obj.is_a?(String)
               return obj
-            elsif (obj.is_a?(Range))
+            elsif obj.is_a?(Range)
               return {
                 OBJECT_CLASSNAME_REFERENCE => CLASS_ID_RANGE,
                 OBJECT_CONTENT_REFERENCE => [get_msgpack_compatible_rec(obj.first), get_msgpack_compatible_rec(obj.last), obj.exclude_end?]
@@ -138,7 +138,7 @@ module RubySerial
             else
               # Handle other objects
               # If there is an ondump callback, call it
-              obj.rubyserial_ondump if (obj.respond_to?(:rubyserial_ondump))
+              obj.rubyserial_ondump if obj.respond_to?(:rubyserial_ondump)
               serialized_instance_vars = {}
               obj.get_instance_vars_to_rubyserial.each do |var_name, value|
                 serialized_instance_vars[var_name] = get_msgpack_compatible_rec(value)

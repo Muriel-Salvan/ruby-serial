@@ -25,7 +25,7 @@ module RubySerialTest
 
     # Read serialized data from disk
     def self.read_serialized_data
-      if (File.exists?(REFERENCE_FILE))
+      if File.exists?(REFERENCE_FILE)
         File.open(REFERENCE_FILE, 'rb') do |file|
           Common.serialized_data = MessagePack.unpack(file.read)
         end
@@ -80,9 +80,9 @@ module RubySerialTest
               # The index of serialized data
               @serial_idx = 0
               # Get the map of serialized data
-              Common.serialized_data[@version] = {} if (Common.serialized_data[@version] == nil)
-              Common.serialized_data[@version][self.class.name] = {} if (Common.serialized_data[@version][self.class.name] == nil)
-              Common.serialized_data[@version][self.class.name][@__name__] = {} if (Common.serialized_data[@version][self.class.name][@__name__] == nil)
+              Common.serialized_data[@version] = {} if Common.serialized_data[@version] == nil
+              Common.serialized_data[@version][self.class.name] = {} if Common.serialized_data[@version][self.class.name] == nil
+              Common.serialized_data[@version][self.class.name][@__name__] = {} if Common.serialized_data[@version][self.class.name][@__name__] == nil
               # map< Index, SerializedData >
               @testcase_serialized_data = Common.serialized_data[@version][self.class.name][@__name__]
               instance_eval(&proc)
@@ -112,7 +112,7 @@ module RubySerialTest
         yield RubySerial.load(serialized_data_from_now)
         # Get the serialized variable from disk if it exists
         serialized_data_from_disk = @testcase_serialized_data[@serial_idx]
-        if (serialized_data_from_disk == nil)
+        if serialized_data_from_disk == nil
           Common.nbr_missing_serialized_data += 1
         else
           serialized_data_from_disk.force_encoding(Encoding::BINARY)
@@ -152,7 +152,7 @@ module MiniTest
       result = run_without_rubyserial(args)
       if RubySerialTest::Common.generate_mode
         RubySerialTest::Common.write_serialized_data
-      elsif (RubySerialTest::Common.nbr_missing_serialized_data > 0)
+      elsif RubySerialTest::Common.nbr_missing_serialized_data > 0
         puts ''
         puts "!!! Number of serialized data missing from reference file: #{RubySerialTest::Common.nbr_missing_serialized_data}."
         puts 'Please use --generate-reference-file when invoking the complete test suite to write the reference file.'

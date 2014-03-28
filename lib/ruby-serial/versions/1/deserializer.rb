@@ -16,7 +16,7 @@ module RubySerial
           # * _Object_: The unpacked data
           def unpack_data(data)
             decoded_data = MessagePack.unpack(data)
-            if (decoded_data['shared_objs'].empty?)
+            if decoded_data['shared_objs'].empty?
               return get_original_rec(decoded_data['obj'])
             else
               # We need to replace some data before
@@ -36,8 +36,8 @@ module RubySerial
           # Result::
           # * _Object_: The original object
           def get_original_rec(decoded_obj, container_to_fill = nil)
-            if (decoded_obj.is_a?(Array))
-              if (container_to_fill == nil)
+            if decoded_obj.is_a?(Array)
+              if container_to_fill == nil
                 return decoded_obj.map { |serialized_item| get_original_rec(serialized_item) }
               else
                 decoded_obj.each do |item|
@@ -45,9 +45,9 @@ module RubySerial
                 end
                 return container_to_fill
               end
-            elsif (decoded_obj.is_a?(Hash))
+            elsif decoded_obj.is_a?(Hash)
               # Check for special hashes
-              if (decoded_obj[OBJECT_ID_REFERENCE] == nil)
+              if decoded_obj[OBJECT_ID_REFERENCE] == nil
                 case decoded_obj[OBJECT_CLASSNAME_REFERENCE]
                 when CLASS_ID_SYMBOL
                   return decoded_obj[OBJECT_CONTENT_REFERENCE].to_sym
@@ -73,20 +73,20 @@ module RubySerial
                   end
                   new_obj.set_instance_vars_from_rubyserial(instance_vars)
                   # If there is an onload callback, call it
-                  new_obj.rubyserial_onload if (new_obj.respond_to?(:rubyserial_onload))
+                  new_obj.rubyserial_onload if new_obj.respond_to?(:rubyserial_onload)
                   return new_obj
                 end
               else
                 # We have a reference to a shared object
                 obj_id = decoded_obj[OBJECT_ID_REFERENCE]
-                if (@decoded_shared_objs[obj_id] == nil)
+                if @decoded_shared_objs[obj_id] == nil
                   # Instantiate it already for cyclic decoding (avoids infinite loops)
                   @decoded_shared_objs[obj_id] = eval(@serialized_shared_objs[obj_id][0]).allocate
                   get_original_rec(@serialized_shared_objs[obj_id][1], @decoded_shared_objs[obj_id])
                 end
                 return @decoded_shared_objs[obj_id]
               end
-            elsif (container_to_fill == nil)
+            elsif container_to_fill == nil
               # Should be only String
               return decoded_obj
             else

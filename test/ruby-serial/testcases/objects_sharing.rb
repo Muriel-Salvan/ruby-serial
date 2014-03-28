@@ -358,10 +358,10 @@ module RubySerialTest
           new_shared_obj1 = nil
           new_shared_obj2 = nil
           obj2.each do |key, value|
-            if (key != 1)
-              if (value == 3)
+            if key != 1
+              if value == 3
                 new_shared_obj1 = key
-              elsif (value == 4)
+              elsif value == 4
                 new_shared_obj2 = key
               end
             end
