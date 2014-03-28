@@ -1,6 +1,7 @@
 RubySerial
 =============
 
+[![Gem Version](https://badge.fury.io/rb/ruby-serial.png)](http://badge.fury.io/rb/ruby-serial)
 [![Build Status](https://travis-ci.org/Muriel-Salvan/ruby-serial.png?branch=master)](https://travis-ci.org/Muriel-Salvan/ruby-serial)
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial/coverage.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
