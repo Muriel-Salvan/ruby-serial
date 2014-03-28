@@ -1,5 +1,6 @@
 module RubySerialTest
 
+  # Define helpers used by various test cases.
   module Common
 
     # Location of the reference file
@@ -56,6 +57,7 @@ module RubySerialTest
       puts "Reference file #{REFERENCE_FILE} written"
     end
 
+    # Helpers used directly in test suite classes
     module Helpers
 
       # Include everything necessary for helpers
@@ -93,6 +95,7 @@ module RubySerialTest
 
     end
 
+    # Helpers used inside test cases
     module InstanceHelpers
 
       # Serialize and deserialize a variable.
@@ -143,6 +146,7 @@ end
 
 module MiniTest
 
+  # Patch the run method to handle the reference file.
   class Unit
 
     # Run the test suite normally but execute some code before and after

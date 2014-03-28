@@ -1,7 +1,10 @@
 module RubySerialTest
 
+  # Define classes used by various test cases.
+  # Those classes are data samples.
   module Common
 
+    # Simple data container
     class DataContainer
 
       attr_accessor :attr1
@@ -34,6 +37,7 @@ module RubySerialTest
 
     end
 
+    # Generic data container that can have its instance variables set using a Hash
     class GenericContainer
 
       def fill(data_set, var_name_prefix = '')
@@ -52,6 +56,7 @@ module RubySerialTest
 
     end
 
+    # Simple data container with a constructor
     class DataContainerWithConstructor < DataContainer
       def initialize(attr1)
         super()
@@ -59,6 +64,7 @@ module RubySerialTest
       end
     end
 
+    # Simple data container tracking when it is serialized
     class DataContainerWithOnDump < DataContainer
 
       dont_rubyserial :ondump_called
@@ -80,6 +86,7 @@ module RubySerialTest
 
     end
 
+    # Simple data container tracking when it is deserialized
     class DataContainerWithOnLoad < DataContainer
 
       dont_rubyserial :onload_called

@@ -6,6 +6,7 @@ module RubySerial
 
       module Version1
 
+        # Serializer version 1
         class Serializer
 
           # Get data

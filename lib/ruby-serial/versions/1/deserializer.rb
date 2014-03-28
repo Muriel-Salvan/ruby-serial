@@ -6,6 +6,7 @@ module RubySerial
 
       module Version1
 
+        # Deserializer version 1
         class Deserializer
 
           # Unpack data

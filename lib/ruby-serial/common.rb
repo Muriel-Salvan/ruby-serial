@@ -1,3 +1,4 @@
+# Namespace encapsulating the API and whole library
 module RubySerial
 
   # Find shortest strings that are unlikely to get in functional Hashes' keys

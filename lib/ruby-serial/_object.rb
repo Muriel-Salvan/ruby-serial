@@ -1,3 +1,4 @@
+# Instrument Object to get access to the list of instance variables to be serialized.
 class Object
 
   # Get the list of instance variables that are meant to be serialized

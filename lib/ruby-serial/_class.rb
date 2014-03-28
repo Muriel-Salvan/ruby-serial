@@ -1,3 +1,5 @@
+# Add helper methods to Class.
+# This way it is possible to declare which instance variables to be serialized at the Class level.
 class Class
 
   attr_reader :dont_rubyserial_lst

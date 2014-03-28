@@ -1,5 +1,6 @@
 module RubySerial
 
+  # Serialize an object. The serialized data can then be deserialized using Deserializer
   class Serializer
 
     # Default encoding version (should be the last one)

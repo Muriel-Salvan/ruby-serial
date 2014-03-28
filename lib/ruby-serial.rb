@@ -5,6 +5,7 @@ require 'ruby-serial/common'
 require 'ruby-serial/serializer'
 require 'ruby-serial/deserializer'
 
+# Namespace encapsulating the API and whole library
 module RubySerial
 
   # Serialize an object into a String
