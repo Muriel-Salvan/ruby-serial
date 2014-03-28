@@ -18,4 +18,8 @@ group :test do
 
   # Code climate
   gem 'codeclimate-test-reporter', require: nil
+
+  # Coveralls
+  gem 'coveralls', require: false
+
 end
