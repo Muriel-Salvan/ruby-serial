@@ -18,13 +18,13 @@ RubyPackager::ReleaseInfo.new.
     :browse_source_url => 'http://ruby-serial.git.sourceforge.net/',
     :dev_status => 'Beta'
   ).
-  add_core_files( [
+  add_core_files([
     'lib/**/*'
-  ] ).
-  add_test_files( [
+  ]).
+  add_test_files([
     'test/**/*'
-  ] ).
-  add_additional_files( [
+  ]).
+  add_additional_files([
     'README',
     'README.md',
     'LICENSE',
@@ -32,7 +32,7 @@ RubyPackager::ReleaseInfo.new.
     'Credits',
     'ChangeLog',
     'Rakefile'
-  ] ).
+  ]).
   gem(
     :gem_name => 'ruby-serial',
     :gem_platform_class_name => 'Gem::Platform::RUBY',
@@ -40,7 +40,7 @@ RubyPackager::ReleaseInfo.new.
     :has_rdoc => true,
     :test_file => 'test/run.rb',
     :gem_dependencies => [
-      [ 'msgpack' ]
+      ['msgpack']
     ],
   ).
   source_forge(

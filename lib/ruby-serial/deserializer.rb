@@ -30,7 +30,7 @@ module RubySerial
         raise "Unknown deserializer version #{version}. Please use a most recent version of RubySerial to decode your data. #{$!}"
       end
 
-      return deserializer.unpack_data(data)
+      deserializer.unpack_data(data)
     end
 
   end

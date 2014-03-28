@@ -11,7 +11,7 @@ module RubySerialTest
 
         # Simple sharing in an Array
         def_test "array_#{data_type_name}" do
-          obj1 = [ var, var ]
+          obj1 = [var, var]
           ruby_serial(obj1) do |obj2|
             assert_equal obj1, obj2
             assert_equal obj2[0].object_id, obj2[1].object_id
@@ -40,7 +40,7 @@ module RubySerialTest
 
         # Sharing at different levels of an Array
         def_test "array_levels_#{data_type_name}" do
-          obj1 = [ var, [ var ], [ [ var ] ] ]
+          obj1 = [var, [var], [[var]]]
           ruby_serial(obj1) do |obj2|
             assert_equal obj1, obj2
             assert_equal obj2[0].object_id, obj2[1][0].object_id
@@ -204,8 +204,8 @@ module RubySerialTest
 
       def_test 'cyclic_share_deeper_in_array' do
         shared_obj = []
-        obj1 = [ 1, shared_obj ]
-        shared_obj << [ 2, [ shared_obj ] ]
+        obj1 = [1, shared_obj]
+        shared_obj << [2, [shared_obj]]
         # obj1 = [ 1, *[ [ 2, [ * ] ] ] ]
         ruby_serial(obj1) do |obj2|
           assert_equal obj1, obj2
@@ -214,10 +214,10 @@ module RubySerialTest
       end
 
       def_test 'cross_cyclic_share_in_array' do
-        shared_obj1 = [ 2 ]
-        shared_obj2 = [ 3, shared_obj1 ]
+        shared_obj1 = [2]
+        shared_obj2 = [3, shared_obj1]
         shared_obj1 << shared_obj2
-        obj1 = [ 1, shared_obj1, shared_obj2 ]
+        obj1 = [1, shared_obj1, shared_obj2]
         # obj1 = [ 1, a[ 2, b[ 3, a[ 2, b ] ] ], b[ 3, a ] ]
         ruby_serial(obj1) do |obj2|
           assert_equal obj1, obj2

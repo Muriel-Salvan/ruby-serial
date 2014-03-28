@@ -165,7 +165,7 @@ module RubySerialTest
           @attr6 = nil
         end
         def to_a
-          return super + [ @attr4, @attr5, @attr6 ]
+          super + [@attr4, @attr5, @attr6]
         end
       end
       def_test 'with_inheritance' do

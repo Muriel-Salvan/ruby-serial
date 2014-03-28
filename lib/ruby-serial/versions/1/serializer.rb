@@ -29,7 +29,7 @@ module RubySerial
               ]
             end
             #puts "Found #{@shared_objs_to_store.size} shared objects to be stored"
-            return {
+            {
               'obj' => get_msgpack_compatible_rec(obj),
               'shared_objs' => @shared_objs_to_store
             }.to_msgpack.force_encoding(Encoding::BINARY)
@@ -133,7 +133,7 @@ module RubySerial
             elsif (obj.is_a?(Range))
               return {
                 OBJECT_CLASSNAME_REFERENCE => CLASS_ID_RANGE,
-                OBJECT_CONTENT_REFERENCE => [ get_msgpack_compatible_rec(obj.first), get_msgpack_compatible_rec(obj.last), obj.exclude_end? ]
+                OBJECT_CONTENT_REFERENCE => [get_msgpack_compatible_rec(obj.first), get_msgpack_compatible_rec(obj.last), obj.exclude_end?]
               }
             else
               # Handle other objects

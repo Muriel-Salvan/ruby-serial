@@ -11,25 +11,25 @@ module RubySerialTest
       def initialize
         @attr1 = 'String attribute'
         @attr2 = 666
-        @attr3 = [ 45, 75, 95 ]
+        @attr3 = [45, 75, 95]
       end
 
       def to_a
-        return [ @attr1, @attr2, @attr3 ]
+        [@attr1, @attr2, @attr3]
       end
 
       def ==(other)
-        return ((other.class == self.class) and
-                ((other.object_id == self.object_id) or
-                 (other.to_a == self.to_a)))
+        ((other.class == self.class) and
+                ((other.object_id == object_id) or
+                 (other.to_a == to_a)))
       end
 
       def eql?(other)
-        return to_a.eql?(other.to_a)
+        to_a.eql?(other.to_a)
       end
 
       def hash
-        return to_a.hash
+        to_a.hash
       end
 
     end
@@ -38,16 +38,16 @@ module RubySerialTest
 
       def fill(data_set, var_name_prefix = '')
         data_set.each do |var_name, var|
-          self.instance_variable_set("@#{var_name_prefix}#{var_name}".to_sym, var)
+          instance_variable_set("@#{var_name_prefix}#{var_name}".to_sym, var)
         end
       end
 
       def to_a
-        return self.instance_variables.map { |var_name| self.instance_variable_get(var_name) }
+        instance_variables.map { |var_name| instance_variable_get(var_name) }
       end
 
       def ==(other)
-        return ((self.class == other.class) and (self.to_a == other.to_a))
+        ((self.class == other.class) and (to_a == other.to_a))
       end
 
     end
@@ -69,7 +69,7 @@ module RubySerialTest
       end
 
       def ondump_called?
-        return @ondump_called
+        @ondump_called
       end
 
       def rubyserial_ondump
@@ -91,7 +91,7 @@ module RubySerialTest
       end
 
       def onload_called?
-        return @onload_called
+        @onload_called
       end
 
       attr_reader :loaded_vars
@@ -106,7 +106,7 @@ module RubySerialTest
 
     # Objects that can share the same reference when duplicated (even as Hash keys)
     DATA_SAMPLES_SHAREABLE = {
-      'Array' => [ 1, 2, 3 ],
+      'Array' => [1, 2, 3],
       'Hash' => { 1 => 2, 3 => 4 },
       'Object' => DataContainer.new,
       'ObjectWithConstructor' => DataContainerWithConstructor.new(256)
@@ -119,7 +119,7 @@ module RubySerialTest
 
     # All data samples to test
     DATA_SAMPLES = {
-      'Fixnum' => 123456,
+      'Fixnum' => 123_456,
       'Float' => 1.23456,
       'Symbol' => :TestSymbol,
       'Nil' => nil,

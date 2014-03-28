@@ -15,7 +15,7 @@ module RubySerial
           # Result::
           # * _Object_: The unpacked data
           def unpack_data(data)
-            decoded_data = MessagePack::unpack(data)
+            decoded_data = MessagePack.unpack(data)
             if (decoded_data['shared_objs'].empty?)
               return get_original_rec(decoded_data['obj'])
             else
@@ -52,10 +52,10 @@ module RubySerial
                 when CLASS_ID_SYMBOL
                   return decoded_obj[OBJECT_CONTENT_REFERENCE].to_sym
                 when CLASS_ID_ENCODING
-                  return Encoding::find(decoded_obj[OBJECT_CONTENT_REFERENCE])
+                  return Encoding.find(decoded_obj[OBJECT_CONTENT_REFERENCE])
                 when CLASS_ID_RANGE
                   serialized_first, serialized_last, exclude_end = decoded_obj[OBJECT_CONTENT_REFERENCE]
-                  return (exclude_end ? (get_original_rec(serialized_first)...get_original_rec(serialized_last)) : (get_original_rec(serialized_first)..get_original_rec(serialized_last)) )
+                  return (exclude_end ? (get_original_rec(serialized_first)...get_original_rec(serialized_last)) : (get_original_rec(serialized_first)..get_original_rec(serialized_last)))
                 when nil
                   # Normal hash
                   hash_obj = ((container_to_fill == nil) ? {} : container_to_fill)

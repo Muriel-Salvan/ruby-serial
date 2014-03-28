@@ -34,7 +34,7 @@ module RubySerial
         raise "Unknown serializer version #{@version}: #{$!}"
       end
 
-      return "#{@version}\x00#{serializer.pack_data(@obj)}".force_encoding(Encoding::BINARY)
+      "#{@version}\x00#{serializer.pack_data(@obj)}".force_encoding(Encoding::BINARY)
     end
 
   end

@@ -16,7 +16,7 @@ module RubySerialTest
 
         # A single data in an Array
         def_test "array_#{data_type_name}" do
-          array = [ var ]
+          array = [var]
           assert_bijection array
         end
 

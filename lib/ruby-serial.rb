@@ -16,7 +16,7 @@ module RubySerial
   # Result::
   # * _String_: Serialized object
   def self.dump(obj, options = {})
-    return Serializer.new(obj, options).dump
+    Serializer.new(obj, options).dump
   end
 
   # Deserialize an object from a String
@@ -26,7 +26,7 @@ module RubySerial
   # Result::
   # * _Object_: Corresponding Ruby object
   def self.load(data)
-    return Deserializer.new(data).load
+    Deserializer.new(data).load
   end
 
 end

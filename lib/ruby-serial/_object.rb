@@ -15,16 +15,16 @@ class Object
         instance_var_names = klass.rubyserial_only_lst
       end
     elsif (klass.dont_rubyserial_lst != nil)
-      instance_var_names = self.instance_variables - klass.dont_rubyserial_lst
+      instance_var_names = instance_variables - klass.dont_rubyserial_lst
     else
-      instance_var_names = self.instance_variables
+      instance_var_names = instance_variables
     end
     # Compute the resulting map
     instance_vars = {}
     instance_var_names.each do |sym_var|
-      instance_vars[sym_var.to_s] = self.instance_variable_get(sym_var)
+      instance_vars[sym_var.to_s] = instance_variable_get(sym_var)
     end
-    return instance_vars
+    instance_vars
   end
 
   # Set the list of instance variables that were serialized
@@ -33,7 +33,7 @@ class Object
   # * *instance_vars* (<em>map<String,Object></em>): Set of instance variables, per name
   def set_instance_vars_from_rubyserial(instance_vars)
     instance_vars.each do |var_name, value|
-      self.instance_variable_set(var_name.to_sym, value)
+      instance_variable_set(var_name.to_sym, value)
     end
   end
 

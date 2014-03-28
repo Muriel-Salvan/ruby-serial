@@ -20,4 +20,4 @@ require 'ruby-serial/testcases/objects_sharing'
 require 'ruby-serial/testcases/user_objects'
 
 # If the script is invoked with --generate-reference-file, we generate files storing serialized data
-RubySerialTest::Common::set_generate_mode if generate_reference_file
+RubySerialTest::Common.set_generate_mode if generate_reference_file
