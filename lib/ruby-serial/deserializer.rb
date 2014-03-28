@@ -27,7 +27,7 @@ module RubySerial
         require "ruby-serial/versions/#{version}/deserializer"
         deserializer = eval("RubySerial::Deserializer::Versions::Version_#{version}")::Deserializer.new
       rescue
-        raise "Unknown deserializer version #{version}. Please use a most recent version of RubySerial to decode your data. #{$!}"
+        raise "Unknown deserializer version #{version}. Please use a most recent version of RubySerial to decode your data. #{$ERROR_INFO}"
       end
 
       deserializer.unpack_data(data)

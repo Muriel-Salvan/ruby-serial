@@ -31,7 +31,7 @@ module RubySerial
         require "ruby-serial/versions/#{@version}/serializer"
         serializer = eval("RubySerial::Serializer::Versions::Version_#{@version}")::Serializer.new
       rescue
-        raise "Unknown serializer version #{@version}: #{$!}"
+        raise "Unknown serializer version #{@version}: #{$ERROR_INFO}"
       end
 
       "#{@version}\x00#{serializer.pack_data(@obj)}".force_encoding(Encoding::BINARY)

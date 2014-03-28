@@ -5,9 +5,9 @@ generate_reference_file = ARGV.delete('--generate-reference-file')
 root_path = File.expand_path("#{File.dirname(__FILE__)}/..")
 
 # Add the test directory to the current load path
-$: << "#{root_path}/test"
+$LOAD_PATH << "#{root_path}/test"
 # And the lib one too
-$: << "#{root_path}/lib"
+$LOAD_PATH << "#{root_path}/lib"
 
 # Require the main library
 require 'ruby-serial'
