@@ -16,6 +16,6 @@ gemspec
 group :test do
   gem 'rake'
 
-  # Code analysis tools
-
+  # Code climate
+  gem 'codeclimate-test-reporter', require: nil
 end

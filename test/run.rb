@@ -1,3 +1,5 @@
+require 'codeclimate-test-reporter'
+CodeClimate::TestReporter.start
 require 'test/unit'
 
 generate_reference_file = ARGV.delete('--generate-reference-file')

@@ -9,3 +9,7 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
+
+before_install:
+  # Setup token for CodeClimate
+  - "export CODECLIMATE_REPO_TOKEN=92e72299f5b0a67c21a7901b99a6cd189cd49617abc7b9b4a72b593f5fbec944"
