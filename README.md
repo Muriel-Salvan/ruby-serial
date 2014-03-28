@@ -4,6 +4,7 @@ RubySerial
 [![Build Status](https://travis-ci.org/Muriel-Salvan/ruby-serial.png?branch=master)](https://travis-ci.org/Muriel-Salvan/ruby-serial)
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial/coverage.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
+[![Dependency Status](https://gemnasium.com/Muriel-Salvan/ruby-serial.svg)](https://gemnasium.com/Muriel-Salvan/ruby-serial)
 
 ruby-serial is a Ruby library serializing Ruby objects, optimized in many ways:
 
