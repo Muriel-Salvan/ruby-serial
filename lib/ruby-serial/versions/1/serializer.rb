@@ -48,11 +48,11 @@ module RubySerial
                !obj.is_a?(Float) &&
                !obj.is_a?(Symbol) &&
                !obj.is_a?(Encoding) &&
-               obj != nil &&
+               !obj.nil? &&
                obj != true &&
                obj != false
               # Check if obj id is shared
-              if @objs[obj.object_id] == nil
+              if @objs[obj.object_id].nil?
                 # First time we encounter this object
                 @objs[obj.object_id] = obj
                 # See other references
@@ -89,7 +89,7 @@ module RubySerial
             if obj.is_a?(Fixnum) ||
                obj.is_a?(Bignum) ||
                obj.is_a?(Float) ||
-               obj == nil ||
+               obj.nil? ||
                obj == true ||
                obj == false
               return obj
@@ -110,7 +110,7 @@ module RubySerial
             # Handle shared objects
             #
             elsif check_shared &&
-                  @shared_objs[obj.object_id] != nil
+                  !@shared_objs[obj.object_id].nil?
               # This object is shared: store its object_id only
               return {
                 OBJECT_ID_REFERENCE => obj.object_id

@@ -15,4 +15,7 @@ gemspec
 
 group :test do
   gem 'rake'
+
+  # Code analysis tools
+
 end

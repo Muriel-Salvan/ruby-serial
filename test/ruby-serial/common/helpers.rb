@@ -80,9 +80,9 @@ module RubySerialTest
               # The index of serialized data
               @serial_idx = 0
               # Get the map of serialized data
-              Common.serialized_data[@version] = {} if Common.serialized_data[@version] == nil
-              Common.serialized_data[@version][self.class.name] = {} if Common.serialized_data[@version][self.class.name] == nil
-              Common.serialized_data[@version][self.class.name][@__name__] = {} if Common.serialized_data[@version][self.class.name][@__name__] == nil
+              Common.serialized_data[@version] = {} if Common.serialized_data[@version].nil?
+              Common.serialized_data[@version][self.class.name] = {} if Common.serialized_data[@version][self.class.name].nil?
+              Common.serialized_data[@version][self.class.name][@__name__] = {} if Common.serialized_data[@version][self.class.name][@__name__].nil?
               # map< Index, SerializedData >
               @testcase_serialized_data = Common.serialized_data[@version][self.class.name][@__name__]
               instance_eval(&proc)
@@ -112,7 +112,7 @@ module RubySerialTest
         yield RubySerial.load(serialized_data_from_now)
         # Get the serialized variable from disk if it exists
         serialized_data_from_disk = @testcase_serialized_data[@serial_idx]
-        if serialized_data_from_disk == nil
+        if serialized_data_from_disk.nil?
           Common.nbr_missing_serialized_data += 1
         elsif !Common.generate_mode
           serialized_data_from_disk.force_encoding(Encoding::BINARY)
@@ -120,7 +120,7 @@ module RubySerialTest
           # Therefore we can't compare serialized data directly between reference file and a call to RubySerial::dump
           yield RubySerial.load(serialized_data_from_disk)
         end
-        serialized_data = (Common.generate_mode || (serialized_data_from_disk == nil)) ? serialized_data_from_now : serialized_data_from_disk
+        serialized_data = (Common.generate_mode || (serialized_data_from_disk.nil?)) ? serialized_data_from_now : serialized_data_from_disk
         @testcase_serialized_data[@serial_idx] = serialized_data if Common.generate_mode
         @serial_idx += 1
       end

@@ -113,7 +113,7 @@ module RubySerialTest
 
     # Objects that can share the same reference when duplicated except when used as Hash keys
     DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS = {
-      'String' => 'My test string',
+      'String' => 'My test string'
     }.merge(DATA_SAMPLES_SHAREABLE)
 
     # All data samples to test

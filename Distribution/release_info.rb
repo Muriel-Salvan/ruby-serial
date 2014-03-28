@@ -41,7 +41,7 @@ RubyPackager::ReleaseInfo.new.
     test_file: 'test/run.rb',
     gem_dependencies: [
       ['msgpack']
-    ],
+    ]
   ).
   source_forge(
     login: 'murielsalvan',
