@@ -298,7 +298,7 @@ module RubySerialTest
         obj1[obj1] = 1
         ruby_serial(obj1) do |obj2|
           # TODO: Understand why the following fails
-          #assert_equal obj1, obj2
+          # assert_equal obj1, obj2
           assert_equal obj2.object_id, obj2.keys[0].object_id
         end
       end
@@ -317,7 +317,7 @@ module RubySerialTest
         # }
         ruby_serial(obj1) do |obj2|
           # TODO: Understand why the following fails
-          #assert_equal obj1, obj2
+          # assert_equal obj1, obj2
           assert_equal obj2.keys.select { |key| key != 1 }[0].object_id, obj2.keys.select { |key| key != 1 }[0][4].keys[0].object_id
         end
       end
@@ -353,7 +353,7 @@ module RubySerialTest
         # }
         ruby_serial(obj1) do |obj2|
           # TODO: Understand why the following fails
-          #assert_equal obj1, obj2
+          # assert_equal obj1, obj2
           # Get back the 2 shared objects
           new_shared_obj1 = nil
           new_shared_obj2 = nil
@@ -378,7 +378,7 @@ module RubySerialTest
         obj1.attr1 = obj1
         ruby_serial(obj1) do |obj2|
           # TODO: Implement a correct == operator immune to cycles and uncomment the following
-          #assert_equal obj1, obj2
+          # assert_equal obj1, obj2
           assert_equal obj2.object_id, obj2.attr1.object_id
         end
       end
@@ -400,7 +400,7 @@ module RubySerialTest
         # }
         ruby_serial(obj1) do |obj2|
           # TODO: Implement a correct == operator immune to cycles and uncomment the following
-          #assert_equal obj1, obj2
+          # assert_equal obj1, obj2
           assert_equal obj2.attr2.object_id, obj2.attr2.attr1.attr2.object_id
         end
       end
@@ -435,7 +435,7 @@ module RubySerialTest
         # }
         ruby_serial(obj1) do |obj2|
           # TODO: Implement a correct == operator immune to cycles and uncomment the following
-          #assert_equal obj1, obj2
+          # assert_equal obj1, obj2
           assert_equal obj2.attr2.object_id, obj2.attr2.attr2.attr2.object_id
           assert_equal obj2.attr2.object_id, obj2.attr3.attr2.object_id
           assert_equal obj2.attr3.object_id, obj2.attr2.attr2.object_id

@@ -28,7 +28,7 @@ module RubySerial
                 get_msgpack_compatible_rec(@objs[object_id], false)
               ]
             end
-            #puts "Found #{@shared_objs_to_store.size} shared objects to be stored"
+            # puts "Found #{@shared_objs_to_store.size} shared objects to be stored"
             {
               'obj' => get_msgpack_compatible_rec(obj),
               'shared_objs' => @shared_objs_to_store
