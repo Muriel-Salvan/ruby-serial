@@ -19,8 +19,8 @@ module RubySerialTest
       end
 
       def ==(other)
-        ((other.class == self.class) and
-                ((other.object_id == object_id) or
+        ((other.class == self.class) &&
+                ((other.object_id == object_id) ||
                  (other.to_a == to_a)))
       end
 
@@ -47,7 +47,7 @@ module RubySerialTest
       end
 
       def ==(other)
-        ((self.class == other.class) and (to_a == other.to_a))
+        ((self.class == other.class) && (to_a == other.to_a))
       end
 
     end

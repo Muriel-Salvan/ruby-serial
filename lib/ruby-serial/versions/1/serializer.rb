@@ -43,13 +43,13 @@ module RubySerial
           # Parameters::
           # * *obj* (_Object_): The object to inspect
           def gather_ids_rec(obj)
-            if ((!obj.is_a?(Fixnum)) and
-                (!obj.is_a?(Bignum)) and
-                (!obj.is_a?(Float)) and
-                (!obj.is_a?(Symbol)) and
-                (!obj.is_a?(Encoding)) and
-                (obj != nil) and
-                (obj != true) and
+            if ((!obj.is_a?(Fixnum)) &&
+                (!obj.is_a?(Bignum)) &&
+                (!obj.is_a?(Float)) &&
+                (!obj.is_a?(Symbol)) &&
+                (!obj.is_a?(Encoding)) &&
+                (obj != nil) &&
+                (obj != true) &&
                 (obj != false))
               # Check if obj id is shared
               if (@objs[obj.object_id] == nil)
@@ -86,11 +86,11 @@ module RubySerial
           # Result::
           # * _Object_: The object ready to be serialized
           def get_msgpack_compatible_rec(obj, check_shared = true)
-            if ((obj.is_a?(Fixnum)) or
-                (obj.is_a?(Bignum)) or
-                (obj.is_a?(Float)) or
-                (obj == nil) or
-                (obj == true) or
+            if ((obj.is_a?(Fixnum)) ||
+                (obj.is_a?(Bignum)) ||
+                (obj.is_a?(Float)) ||
+                (obj == nil) ||
+                (obj == true) ||
                 (obj == false))
               return obj
             #
@@ -109,7 +109,7 @@ module RubySerial
             #
             # Handle shared objects
             #
-            elsif (check_shared and
+            elsif (check_shared &&
                    (@shared_objs[obj.object_id] != nil))
               # This object is shared: store its object_id only
               return {

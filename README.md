@@ -31,7 +31,7 @@ class User
   attr_accessor :name
   attr_accessor :comment
   def ==(other)
-    other.is_a?(User) and (@name == other.name) and (@comment == other.comment)
+    other.is_a?(User) && (@name == other.name) && (@comment == other.comment)
   end
 end
 shared_obj = 'This string instance will be shared'

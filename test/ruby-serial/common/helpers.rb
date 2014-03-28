@@ -120,7 +120,7 @@ module RubySerialTest
           # Therefore we can't compare serialized data directly between reference file and a call to RubySerial::dump
           yield RubySerial.load(serialized_data_from_disk)
         end
-        serialized_data = (Common.generate_mode or (serialized_data_from_disk == nil)) ? serialized_data_from_now : serialized_data_from_disk
+        serialized_data = (Common.generate_mode || (serialized_data_from_disk == nil)) ? serialized_data_from_now : serialized_data_from_disk
         @testcase_serialized_data[@serial_idx] = serialized_data if Common.generate_mode
         @serial_idx += 1
       end
