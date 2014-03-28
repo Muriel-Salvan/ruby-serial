@@ -131,8 +131,8 @@ module RubySerialTest
           assert_equal obj1, obj2
           nbr_data_samples = Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.size
           nbr_data_samples.times do |idx_data_sample|
-            (nbr_repeatitions-1).times do |idx_repeatition|
-              assert_equal obj2[idx_data_sample].object_id, obj2[(idx_repeatition+1)*nbr_data_samples+idx_data_sample].object_id
+            (nbr_repeatitions - 1).times do |idx_repeatition|
+              assert_equal obj2[idx_data_sample].object_id, obj2[(idx_repeatition + 1) * nbr_data_samples + idx_data_sample].object_id
             end
           end
         end
@@ -144,14 +144,14 @@ module RubySerialTest
         nbr_data_samples = Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.size
         nbr_repeatitions.times do |idx_repeatition|
           Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.values.each_with_index do |var, idx_data_sample|
-            obj1[nbr_data_samples*idx_repeatition+idx_data_sample] = var
+            obj1[nbr_data_samples * idx_repeatition + idx_data_sample] = var
           end
         end
         ruby_serial(obj1) do |obj2|
           assert_equal obj1, obj2
           nbr_data_samples.times do |idx_data_sample|
-            (nbr_repeatitions-1).times do |idx_repeatition|
-              assert_equal obj2[idx_data_sample].object_id, obj2[(idx_repeatition+1)*nbr_data_samples+idx_data_sample].object_id
+            (nbr_repeatitions - 1).times do |idx_repeatition|
+              assert_equal obj2[idx_data_sample].object_id, obj2[(idx_repeatition + 1) * nbr_data_samples + idx_data_sample].object_id
             end
           end
         end
@@ -163,14 +163,14 @@ module RubySerialTest
         nbr_data_samples = Common::DATA_SAMPLES_SHAREABLE.size
         nbr_repeatitions.times do |idx_repeatition|
           Common::DATA_SAMPLES_SHAREABLE.values.each_with_index do |var, idx_data_sample|
-            obj1[nbr_data_samples*idx_repeatition+idx_data_sample] = { var => 1 }
+            obj1[nbr_data_samples * idx_repeatition + idx_data_sample] = { var => 1 }
           end
         end
         ruby_serial(obj1) do |obj2|
           assert_equal obj1, obj2
           nbr_data_samples.times do |idx_data_sample|
-            (nbr_repeatitions-1).times do |idx_repeatition|
-              assert_equal obj2[idx_data_sample].keys[0].object_id, obj2[(idx_repeatition+1)*nbr_data_samples+idx_data_sample].keys[0].object_id
+            (nbr_repeatitions - 1).times do |idx_repeatition|
+              assert_equal obj2[idx_data_sample].keys[0].object_id, obj2[(idx_repeatition + 1) * nbr_data_samples + idx_data_sample].keys[0].object_id
             end
           end
         end
@@ -186,8 +186,8 @@ module RubySerialTest
         ruby_serial(obj1) do |obj2|
           assert_equal obj1, obj2
           Common::DATA_SAMPLES_SHAREABLE_EXCEPT_AS_HASH_KEYS.keys.each do |var_name|
-            (nbr_repeatitions-1).times do |idx_repeatition|
-              assert_equal obj2.instance_variable_get("@repeat_0_#{var_name}".to_sym).object_id, obj2.instance_variable_get("@repeat_#{idx_repeatition+1}_#{var_name}".to_sym).object_id
+            (nbr_repeatitions - 1).times do |idx_repeatition|
+              assert_equal obj2.instance_variable_get("@repeat_0_#{var_name}".to_sym).object_id, obj2.instance_variable_get("@repeat_#{idx_repeatition + 1}_#{var_name}".to_sym).object_id
             end
           end
         end

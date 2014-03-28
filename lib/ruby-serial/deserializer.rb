@@ -19,8 +19,8 @@ module RubySerial
       # Find the version
       idx_data_separator = @data.index("\x00")
       raise 'Unknown format of data. It appears this data has not been serialized using RubySerial.' if idx_data_separator == nil
-      version = @data[0..idx_data_separator-1]
-      data = @data[idx_data_separator+1..-1]
+      version = @data[0..(idx_data_separator - 1)]
+      data = @data[(idx_data_separator + 1)..-1]
 
       deserializer = nil
       begin
