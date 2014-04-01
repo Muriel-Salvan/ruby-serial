@@ -43,6 +43,7 @@ RubySerial.load str
 ### More info
 
 See [ruby-serial home page](http://ruby-serial.x-aeon.com) for more complete examples and references.
+Read [ruby-serial documentation](https://github.com/Muriel-Salvan/ruby-serial/wiki) for a complete overview of ruby-serial features.
 
 ### Contact
 
