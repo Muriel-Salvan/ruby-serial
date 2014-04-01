@@ -2,17 +2,18 @@ RubySerial
 =============
 
 [![Gem Version](https://badge.fury.io/rb/ruby-serial.png)](http://badge.fury.io/rb/ruby-serial)
+[![Inline docs](http://inch-pages.github.io/github/Muriel-Salvan/ruby-serial.png)](http://inch-pages.github.io/github/Muriel-Salvan/ruby-serial)
 [![Build Status](https://travis-ci.org/Muriel-Salvan/ruby-serial.png?branch=master)](https://travis-ci.org/Muriel-Salvan/ruby-serial)
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial/coverage.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
-[![Inline docs](http://inch-pages.github.io/github/Muriel-Salvan/ruby-serial.png)](http://inch-pages.github.io/github/Muriel-Salvan/ruby-serial)
 [![Dependency Status](https://gemnasium.com/Muriel-Salvan/ruby-serial.svg)](https://gemnasium.com/Muriel-Salvan/ruby-serial)
 
 ruby-serial is a Ruby library serializing Ruby objects, optimized in many ways:
 
-* **Space efficient**: Use MessagePack (binary compact storage) and don't serialize twice the same object
+* **Fast and small**: use [MessagePack](http://msgpack.org/) (binary compact storage) and don't serialize twice the same object
+* **Independent of Ruby version**: dump and load data across different versions
 * **Keep shared objects**: if an object is shared by others, serialization still keeps the reference and does not duplicate objects in memory
-* Gives the ability to **fine tune which attributes of your objects are to be serialized**
+* Gives the ability to **fine tune which attributes of your objects are to be serialized** (defaults to all)
 * Keeps **backward compatibility** with previously serialized versions.
 * Has **callbacks support** to fine tune the serialization process.
 * Can serialize objects having **reference cycles** (self-contained Arrays, Hashes, objects...)
@@ -31,43 +32,17 @@ Its usage is the same as Marshal library:
 
 ```ruby
 require 'ruby-serial'
-# Create example
-class User
-  attr_accessor :name
-  attr_accessor :comment
-  def ==(other)
-    other.is_a?(User) && (@name == other.name) && (@comment == other.comment)
-  end
-end
-shared_obj = 'This string instance will be shared'
-user = User.new
-user.name = 'John'
-user.comment = shared_obj # shared_obj is referenced here
-obj = [
-  'My String',
-  shared_obj, # shared_obj is also referenced here
-  1,
-  user
-]
 
-# Get obj as a serialized String
-serialized_obj = RubySerial::dump(obj)
-# Get back our objects from the serialized String
-deserialized_obj = RubySerial::load(serialized_obj)
-# Both objects are the same
-puts "Same? #{obj == deserialized_obj}"
-# => true
+str = RubySerial.dump [ :hello, 'World', 42 ]
+# => "1\x00\x82\xA3obj\x93\x82\xA2\x00\xBB\xA2\x00\xEE\xA2\x00\xF1\xA5hello\xA5World*\xABshared_objs\x80"
 
-# The shared object is still shared!
-puts "Shared? #{deserialized_obj[1].object_id == deserialized_obj[3].comment.object_id}"
-# => true
+RubySerial.load str
+# => [:hello, "World", 42]
 ```
 
 ### More info
 
-[Complete doc over here](http://ruby-serial.sourceforge.net)!
-
-[Bug tracker](http://sourceforge.net/p/ruby-serial/bugs/)
+See [ruby-serial home page](http://ruby-serial.x-aeon.com) for more complete examples and references.
 
 ### Contact
 
