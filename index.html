@@ -1,119 +1,283 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="ruby-serial: Optimized serialization library for Ruby objects." />
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/kickstart/css/kickstart.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/kickstart/style.css" media="all" />
+    <link type="text/css" rel="stylesheet" href="stylesheets/syntaxhighlighter/shCoreDefault.css"/>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <title>ruby-serial by Muriel-Salvan</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/kickstart/kickstart.js"></script>
+    <script type="text/javascript" src="javascripts/syntaxhighlighter/shCore.js"></script>
+    <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushRuby.js"></script>
+    <script type="text/javascript" src="javascripts/syntaxhighlighter/shBrushBash.js"></script>
+    <script type="text/javascript">
+      SyntaxHighlighter.all()
+    </script>
   </head>
 
   <body>
-    <div id="container">
-      <div class="inner">
+    <div class="grid flex">
 
-        <header>
-          <h1>ruby-serial</h1>
-          <h2>Optimized serialization library for Ruby objects.</h2>
-        </header>
+      <header class="col_12 center" style="margin-top:30px;">
+        <img src="images/logo_256.png" width="100" height="100" style="margin-bottom:20px;"/>
+        <h1>ruby-serial</h1>
+        <h4 style="color:#999;margin-bottom:40px;">Optimized serialization library for Ruby objects.</h4>
+      </header>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/Muriel-Salvan/ruby-serial/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/Muriel-Salvan/ruby-serial/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/Muriel-Salvan/ruby-serial" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+      <div class="col_12">
+        <div class="col_2"></div>
+        <div class="col_8">
+<pre class="nocode brush: ruby; gutter: false;">
+require 'ruby-serial'
 
-        <hr>
+str = RubySerial.dump [ :hello, 'World', 42 ]
+# => "1\x00\x82\xA3obj\x93\x82\xA2\x00\xBB\xA2\x00\xEE\xA2\x00\xF1\xA5hello\xA5World*\xABshared_objs\x80"
 
-        <section id="main_content">
-          <h1>
-<a name="rubyserial" class="anchor" href="#rubyserial"><span class="octicon octicon-link"></span></a>RubySerial</h1>
-
-<p><a href="https://travis-ci.org/Muriel-Salvan/ruby-serial"><img src="https://travis-ci.org/Muriel-Salvan/ruby-serial.png?branch=master" alt="Build Status"></a></p>
-
-<p>ruby-serial is a Ruby library serializing Ruby objects, optimized in many ways:</p>
-
-<ul>
-<li>
-<strong>Space efficient</strong>: Use MessagePack (binary compact storage) and don't serialize twice the same object</li>
-<li>
-<strong>Keep shared objects</strong>: if an object is shared by others, serialization still keeps the reference and does not duplicate objects in memory</li>
-<li>Gives the ability to <strong>fine tune which attributes of your objects are to be serialized</strong>
-</li>
-<li>Keeps <strong>backward compatibility</strong> with previously serialized versions.</li>
-<li>Has <strong>callbacks support</strong> to fine tune the serialization process.</li>
-<li>Can serialize objects having <strong>reference cycles</strong> (self-contained Arrays, Hashes, objects...)</li>
-</ul><h3>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
-
-<p>RubySerial is packaged as a simple Ruby gem:</p>
-
-<pre><code>gem install ruby-serial
-</code></pre>
-
-<h3>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
-
-<p>Its usage is the same as Marshal library:</p>
-
-<div class="highlight highlight-ruby"><pre><span class="nb">require</span> <span class="s1">'ruby-serial'</span> 
-<span class="c1"># Create example</span>
-<span class="k">class</span> <span class="nc">User</span>
-  <span class="kp">attr_accessor</span> <span class="ss">:name</span>
-  <span class="kp">attr_accessor</span> <span class="ss">:comment</span>
-  <span class="k">def</span> <span class="nf">==</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-    <span class="n">other</span><span class="o">.</span><span class="n">is_a?</span><span class="p">(</span><span class="no">User</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="vi">@name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="vi">@comment</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">comment</span><span class="p">)</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-<span class="n">shared_obj</span> <span class="o">=</span> <span class="s1">'This string instance will be shared'</span>
-<span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
-<span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'John'</span>
-<span class="n">user</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">shared_obj</span> <span class="c1"># shared_obj is referenced here</span>
-<span class="n">obj</span> <span class="o">=</span> <span class="o">[</span>
-  <span class="s1">'My String'</span><span class="p">,</span>
-  <span class="n">shared_obj</span><span class="p">,</span> <span class="c1"># shared_obj is also referenced here</span>
-  <span class="mi">1</span><span class="p">,</span>
-  <span class="n">user</span>
-<span class="o">]</span>
-
-<span class="c1"># Get obj as a serialized String</span>
-<span class="n">serialized_obj</span> <span class="o">=</span> <span class="no">RubySerial</span><span class="o">::</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> 
-<span class="c1"># Get back our objects from the serialized String</span>
-<span class="n">deserialized_obj</span> <span class="o">=</span> <span class="no">RubySerial</span><span class="o">::</span><span class="nb">load</span><span class="p">(</span><span class="n">serialized_obj</span><span class="p">)</span> 
-<span class="c1"># Both objects are the same</span>
-<span class="nb">puts</span> <span class="s2">"Same? </span><span class="si">#{</span><span class="n">obj</span> <span class="o">==</span> <span class="n">deserialized_obj</span><span class="si">}</span><span class="s2">"</span>
-<span class="c1"># =&gt; true</span>
-
-<span class="c1"># The shared object is still shared!</span>
-<span class="nb">puts</span> <span class="s2">"Shared? </span><span class="si">#{</span><span class="n">deserialized_obj</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">object_id</span> <span class="o">==</span> <span class="n">deserialized_obj</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">comment</span><span class="o">.</span><span class="n">object_id</span><span class="si">}</span><span class="s2">"</span>
-<span class="c1"># =&gt; true</span>
-</pre></div>
-
-<h3>
-<a name="more-info" class="anchor" href="#more-info"><span class="octicon octicon-link"></span></a>More info</h3>
-
-<p><a href="http://ruby-serial.sourceforge.net">Complete doc over here</a>!</p>
-
-<p><a href="http://sourceforge.net/p/ruby-serial/bugs/">Bug tracker</a></p>
-
-<h3>
-<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h3>
-
-<p>Contributions, questions, jokes? Send them to <a href="mailto:muriel@x-aeon.com">Muriel</a></p>
-        </section>
-
-        <footer>
-          ruby-serial is maintained by <a href="https://github.com/Muriel-Salvan">Muriel-Salvan</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
-
-        
+RubySerial.load str
+# => [:hello, "World", 42]
+</pre>
+        </div>
+        <div class="col_2"></div>
       </div>
+
+      <hr/>
+
+      <div class="col_12">
+        <div class="col_2"></div>
+        <div class="col_8">
+
+          <div class="col_12">
+            <ul class="alt">
+              <li><strong>Fast and small</strong>: use <a href="http://msgpack.org/">MessagePack</a> (binary compact storage) and don't serialize twice the same object</li>
+              <li><strong>Independent of Ruby version</strong>: dump and load data across different versions</li>
+              <li><strong>Keep shared objects</strong>: if an object is shared by others, serialization still keeps the reference and does not duplicate objects in memory</li>
+              <li>Gives the ability to <strong>fine tune which attributes of your objects are to be serialized</strong> (defaults to all)</li>
+              <li>Keeps <strong>backward compatibility</strong> with previously serialized versions</li>
+              <li>Has <strong>callbacks support</strong> to fine tune the serialization process</li>
+              <li>Can serialize objects having <strong>reference cycles</strong> (self-contained Arrays, Hashes, objects...)</li>
+            </ul>
+          </div>
+
+          <hr/>
+
+          <div class="col_12 center">
+<a href="http://badge.fury.io/rb/ruby-serial"><img src="https://badge.fury.io/rb/ruby-serial.png" alt="Gem Version"/></a>
+<a href="http://inch-pages.github.io/github/Muriel-Salvan/ruby-serial"><img src="http://inch-pages.github.io/github/Muriel-Salvan/ruby-serial.png" alt="Inline docs"/></a>
+<a href="https://travis-ci.org/Muriel-Salvan/ruby-serial"><img src="https://travis-ci.org/Muriel-Salvan/ruby-serial.png?branch=master" alt="Build Status"/></a>
+<a href="https://codeclimate.com/github/Muriel-Salvan/ruby-serial"><img src="https://codeclimate.com/github/Muriel-Salvan/ruby-serial.png" alt="Code Climate"/></a>
+<a href="https://codeclimate.com/github/Muriel-Salvan/ruby-serial"><img src="https://codeclimate.com/github/Muriel-Salvan/ruby-serial/coverage.png" alt="Code Climate"/></a>
+<a href="https://gemnasium.com/Muriel-Salvan/ruby-serial"><img src="https://gemnasium.com/Muriel-Salvan/ruby-serial.svg" alt="Dependency Status"/></a>
+          </div>
+
+          <hr/>
+
+          <div class="col_12">
+            <h3 class="center">Installation</h3>
+            <p>
+              Use RubyGems to install it:
+<pre class="nocode brush: bash; gutter: false;">
+gem install ruby-serial
+</pre>
+            </p>
+            <p>
+              If you use <strong><code>bundler</code></strong>, add this into your <strong><code>Gemfile</code></strong>:
+<pre class="nocode brush: ruby; gutter: false;">
+gem 'ruby-serial'
+</pre>
+            </p>
+          </div>
+
+          <hr/>
+
+          <div class="col_12">
+            <h3 class="center">Usage</h3>
+            <p>
+              Require the library before using it:
+<pre class="nocode brush: ruby; gutter: false;">
+require 'ruby-serial'
+</pre>
+            </p>
+            <p>
+              Basic API is the same as <a href="http://www.ruby-doc.org/core-2.1.1/Marshal.html">Marshal</a>:
+              <ul>
+                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/RubySerial.html#method-c-dump"><strong><code>RubySerial.dump</code></strong></a> to serialize an object.</li>
+                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/RubySerial.html#method-c-load"><strong><code>RubySerial.load</code></strong></a> to deserialize an object.</li>
+              </ul>
+            </p>
+            <p>
+<pre class="nocode brush: ruby; highlight: [3, 5]; gutter: false;">
+require 'ruby-serial'
+
+str = RubySerial.dump({:this => 'is', :my => 'Ruby object'})
+
+RubySerial.load(str)
+# => {:this=>"is", :my=>"Ruby object"}
+</pre>
+            </p>
+          </div>
+
+          <hr/>
+
+          <div class="col_12">
+            <h3 class="center">Specify attributes to be serialized in a class</h3>
+            <p>
+              <ul>
+                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/Class.html#method-i-rubyserial_only"><strong><code>rubyserial_only</code></strong></a> to specify a list of instance variables to serialize (can be used several times).</li>
+                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/Class.html#method-i-dont_rubyserial"><strong><code>dont_rubyserial</code></strong></a> to specify a list of instance variables to not serialize (can be used several times).</li>
+              </ul>
+<pre class="nocode brush: ruby; highlight: [14, 15]; gutter: false;">
+require 'ruby-serial'
+
+class User
+  @@current_seq = 0
+
+  attr_accessor :name, :age
+
+  def initialize
+    @seq_id = @@current_seq
+    @@current_seq += 1
+    @internal_id = rand(100)
+  end
+
+  rubyserial_only :name, :seq_id, :internal_id
+  dont_rubyserial :internal_id
+end
+
+user = User.new
+user.name = 'John'
+user.age = 49
+user
+# => #&lt;User:0x30e5488 @seq_id=0, @internal_id=25, @name="John", @age=49>
+
+str = RubySerial.dump user
+# Only @seq_id and @name should have been serialized.
+RubySerial.load str
+# => #&lt;User:0x2a74ca0 @seq_id=0, @name="John">
+</pre>
+            </p>
+          </div>
+
+          <hr/>
+
+          <div class="col_12">
+            <h3 class="center">Use callbacks to control the serialization process</h3>
+            <p>
+              <ul>
+                <li><strong><code>rubyserial_ondump</code></strong> is called just before being serialized (it is possible to add instance variables to be serialized in this step).</li>
+                <li><strong><code>rubyserial_onload</code></strong> is called just after being deserialized.</li>
+              </ul>
+<pre class="nocode brush: ruby; highlight: [10, 11, 12, 15, 16, 17]; gutter: false;">
+require 'ruby-serial'
+
+class User
+  def initialize(name)
+    @name = name
+    @name_shouted = @name.upcase
+  end
+
+  # Called before being serialized
+  def rubyserial_ondump
+    @has_been_serialized = true
+  end
+
+  # Called after being deserialized
+  def rubyserial_onload
+    @name_shouted = @name.upcase
+  end
+
+  # Don't serialize @name_shouted as we can get it back from @name
+  dont_rubyserial :name_shouted
+end
+
+user = User.new('John')
+user
+# => #&lt;User:0x2cc5650 @name="John", @name_shouted="JOHN">
+
+str = RubySerial.dump user
+# @name_shouted should be set even if it was not serialized, and @has_been_serialized should be set too
+RubySerial.load str
+# => #&lt;User:0x301ee88 @name="John", @name_shouted="JOHN", @has_been_serialized=true>
+</pre>
+            </p>
+          </div>
+
+          <hr/>
+
+          <div class="col_12">
+            <h3 class="center">Objects references are kept, even in cycles!</h3>
+            <p>
+<pre class="nocode brush: ruby; highlight: [16, 20]; gutter: false;">
+require 'ruby-serial'
+
+class User
+  attr_accessor :friend
+
+  def initialize(name)
+    @name = name
+  end
+end
+
+user_john = User.new('John')
+user_emma = User.new('Emma')
+user_john.friend = user_emma
+user_emma.friend = user_john
+user_john
+# => #&lt;User:0x2ec6a88 @name="John", @friend=#&lt;User:0x2e1cad8 @name="Emma", @friend=#&lt;User:0x2ec6a88 ...>>>
+
+str = RubySerial.dump user_john
+RubySerial.load str
+# => #&lt;User:0x2815578 @name="John", @friend=#&lt;User:0x2815278 @name="Emma", @friend=#&lt;User:0x2815578 ...>>>
+</pre>
+            </p>
+          </div>
+
+          <hr/>
+
+          <div class="col_12 center">
+            <h3 class="center">Links</h3>
+            <ul class="no-bullet">
+              <li><a class="button" href="https://github.com/Muriel-Salvan/ruby-serial/"><strong><i class="icon-github"></i>&nbsp;&nbsp;&nbsp;&nbsp;ruby-serial on Github&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-github"></i></strong></a></li>
+              <li><a class="button" href="http://ruby-serial.sourceforge.net"><strong><i class="icon-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;Complete documentation&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-book"></i></strong></a></li>
+              <li><a class="button" href="https://github.com/Muriel-Salvan/ruby-serial/issues?state=open"><strong><i class="icon-tasks"></i>&nbsp;&nbsp;&nbsp;&nbsp;Issues / Bugs / Features&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-tasks"></i></strong></a></li>
+              <li><a class="button" href="http://ruby-serial.sourceforge.net/rdoc/latest/ChangeLog.html"><strong><i class="icon-tags"></i>&nbsp;&nbsp;&nbsp;&nbsp;Change log&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-tags"></i></strong></a></li>
+              <li><a class="button" href="http://ruby-serial.sourceforge.net/rdoc/latest"><strong><i class="icon-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;Source documentation&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-book"></i></strong></a></li>
+            </ul>
+          </div>
+
+          <hr/>
+
+          <div class="col_12">
+            <h3 class="center">Contact</h3>
+            <p class="center">
+              Contributions, questions, jokes? <strong>Send them to <a href="mailto:muriel@x-aeon.com">Muriel</a>!</strong>
+            </p>
+          </div>
+
+          <hr/>
+
+        </div>
+
+      </div>
+      <div class="col_2"></div>
     </div>
+
+    <footer class="col_12 center">
+      ruby-serial is maintained by <a href="https://github.com/Muriel-Salvan">Muriel-Salvan</a><br>
+      Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+    </footer>
+
+  </div>
+
   </body>
 </html>
