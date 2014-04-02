@@ -187,6 +187,25 @@ div.syntaxhighlighter {
   border:1px solid #ddd;
 }
 
+#floating_menu {
+  position: absolute;
+  top: 224px;
+}
+
+#floating_menu ul {
+  margin: 0 0 0 0;
+}
+
+#floating_menu.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  margin-left: 0.83333333333333%;
+  padding: 2em;
+  width: 100%;
+}
+
 /* #Media Queries
 ================================================== */
 
