@@ -44,9 +44,13 @@
 
 
       <header class="col_12 center" style="margin-top: 30px;">
-        <img src="images/logo_100.png" width="100" height="100" style="margin-bottom: 20px;"/>
-        <h1>ruby-serial</h1>
-        <h4 style="color:#999;margin-bottom: 40px;">Optimized serialization library for Ruby objects.</h4>
+        <div class="col_2"></div>
+        <div class="col_8">
+          <img src="images/logo_100.png" width="100" height="100" style="margin-bottom: 20px;"/>
+          <h1>ruby-serial</h1>
+          <h4 style="color:#999;margin-bottom: 40px;">Optimized serialization library for Ruby objects.</h4>
+        </div>
+        <div class="col_2"></div>
       </header>
 
       <div class="col_12">
@@ -147,8 +151,8 @@ RubySerial.load(str)
             <h3 class="center">Specify attributes to be serialized in a class</h3>
             <p>
               <ul>
-                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/Class.html#method-i-rubyserial_only"><strong><code>rubyserial_only</code></strong></a> to specify a list of instance variables to serialize (can be used several times).</li>
-                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/Class.html#method-i-dont_rubyserial"><strong><code>dont_rubyserial</code></strong></a> to specify a list of instance variables to not serialize (can be used several times).</li>
+                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/Class.html#method-i-rubyserial_only"><strong><code>rubyserial_only</code></strong></a> to specify a list of <strong>instance variables to serialize</strong> (can be used several times).</li>
+                <li>Use <a href="http://ruby-serial.sourceforge.net/rdoc/latest/Class.html#method-i-dont_rubyserial"><strong><code>dont_rubyserial</code></strong></a> to specify a list of <strong>instance variables to not serialize</strong> (can be used several times).</li>
               </ul>
 <pre class="nocode brush: ruby; highlight: [14, 15]; gutter: false;">
 require 'ruby-serial'
@@ -188,8 +192,8 @@ RubySerial.load str
             <h3 class="center">Use callbacks to control the serialization process</h3>
             <p>
               <ul>
-                <li><strong><code>rubyserial_ondump</code></strong> is called just before being serialized (it is possible to add instance variables to be serialized in this step).</li>
-                <li><strong><code>rubyserial_onload</code></strong> is called just after being deserialized.</li>
+                <li><strong><code>rubyserial_ondump</code></strong> is called just <strong>before being serialized</strong> (it is possible to add instance variables to be serialized in this step).</li>
+                <li><strong><code>rubyserial_onload</code></strong> is called just <strong>after being deserialized</strong>.</li>
               </ul>
 <pre class="nocode brush: ruby; highlight: [10, 11, 12, 15, 16, 17]; gutter: false;">
 require 'ruby-serial'

@@ -12,7 +12,7 @@ jQuery(document).ready(function () {
       return pixels;
   }
 
-  var menuTopSpace = getDefaultFontSize(jQuery('#floating_menu')[0])*2.5;
+  var menuTopSpace = getDefaultFontSize(jQuery('#floating_menu')[0])*2;
   var top = jQuery('#floating_menu').offset().top - parseFloat(jQuery('#floating_menu').css('marginTop').replace(/auto/, 100));
   jQuery(window).scroll(function (event) {
     // what the y position of the scroll is

@@ -1,3 +1,7 @@
+body{
+  font: normal 1.3em/150% 'Arimo', arial, verdana, sans-serif;
+}
+
 header {
   padding-top: 35px;
   padding-bottom: 25px;
@@ -190,6 +194,8 @@ div.syntaxhighlighter {
 #floating_menu {
   position: absolute;
   top: 224px;
+  font: normal 0.8em/150% 'Arimo', arial, verdana, sans-serif;
+  margin: 0 0 0 0;
 }
 
 #floating_menu ul {
@@ -198,12 +204,9 @@ div.syntaxhighlighter {
 
 #floating_menu.fixed {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 2em;
   z-index: 1;
-  margin-left: 0.83333333333333%;
-  padding: 2em;
-  width: 100%;
+  width: 15%;
 }
 
 /* #Media Queries
