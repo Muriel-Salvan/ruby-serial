@@ -8,7 +8,9 @@ RubySerial
 [![Code Climate](https://codeclimate.com/github/Muriel-Salvan/ruby-serial/coverage.png)](https://codeclimate.com/github/Muriel-Salvan/ruby-serial)
 [![Dependency Status](https://gemnasium.com/Muriel-Salvan/ruby-serial.svg)](https://gemnasium.com/Muriel-Salvan/ruby-serial)
 
--> [![Click here to lend your support to: ruby-serial and make a donation at pledgie.com !](https://pledgie.com/campaigns/24741.png?skin_name=chrome)](https://pledgie.com/campaigns/24741) <-
+<p align="center">
+  [![Click here to lend your support to: ruby-serial and make a donation at pledgie.com !](https://pledgie.com/campaigns/24741.png?skin_name=chrome)](https://pledgie.com/campaigns/24741)
+</p>
 
 ruby-serial is a Ruby library serializing Ruby objects, optimized in many ways:
 
