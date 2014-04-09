@@ -9,7 +9,7 @@ RubySerial
 [![Dependency Status](https://gemnasium.com/Muriel-Salvan/ruby-serial.svg)](https://gemnasium.com/Muriel-Salvan/ruby-serial)
 
 <p align="center">
-  [![Click here to lend your support to: ruby-serial and make a donation at pledgie.com !](https://pledgie.com/campaigns/24741.png?skin_name=chrome)](https://pledgie.com/campaigns/24741)
+  <a href='https://pledgie.com/campaigns/24741'><img alt='Click here to lend your support to: ruby-serial and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/24741.png?skin_name=chrome' border='0' ></a>
 </p>
 
 ruby-serial is a Ruby library serializing Ruby objects, optimized in many ways:
