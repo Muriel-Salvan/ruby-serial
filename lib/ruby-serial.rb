@@ -1,3 +1,4 @@
+require 'English'
 require 'msgpack'
 require 'ruby-serial/_class'
 require 'ruby-serial/_object'
